@@ -1,0 +1,243 @@
+/*
+  CUSTOM PROPERTIES
+*/
+:root {
+  --fs-1: 0.702rem;
+  --fs-2: 0.79rem;
+  --fs-3: 0.889rem;
+  --fs-4: 1rem;
+  --fs-5: 1.125rem;
+  --fs-6: 1.266rem;
+  --fs-7: 1.424rem;
+  --fs-8: 1.602rem;
+  --fs-9: 1.802rem;
+  --clr-primary: #2850e4;
+  --clr-secondary: #ebe6e1;
+  --clr-tertiary: #5a5858;
+  --clr-quaternary: #f3f3f3;
+}
+
+
+/*
+  RESETS
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd,
+ul {
+  margin: 0;
+}
+
+ul,
+ol,
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+html:focus-within {
+  scroll-behavior: smooth;
+  font-size: 100%;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  font-weight: 400;
+  line-height: 1.75;
+  background-color: var(--clr-quaternary);
+  padding: 0;
+  margin: 0;
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+a {
+  text-decoration: none;
+}
+
+a,
+button {
+  color: inherit;
+  cursor: pointer;
+}
+
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/*
+  TYPOGRAPHY
+*/
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  font-size: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--color-secondary);
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 3rem 0 1.38rem;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+a,
+label,
+li {
+  font-family: 'Open Sans', sans-serif;
+  color: var(--clr-tertiary);
+}
+
+h1 {
+  margin-top: 0;
+  font-size: var(--fs-9);
+}
+
+h2 {font-size: var(--fs-8);}
+
+h3 {font-size: var(--fs-7);}
+
+h4 {font-size: var(--fs-6);}
+
+h5 {font-size: var(--fs-5);}
+
+small, .text_small {font-size: var(--fs-3);}
+
+#root, .App {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  color: var(--clr-tertiary);
+}
+
+input {
+  padding: 0.6rem 0 0.6rem 0.4rem;
+  width: 100%;
+  background-color: #fff;
+  color: var(--clr-tertiary);
+  outline: none;
+  border: 2px solid var(--clr-secondary);
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+input:focus-within {
+  border: 2px solid var(--clr-tertiary);
+}
+
+/*
+  CLASSES
+*/
+.forecast {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto 1rem auto;
+}
+
+
+.forecast__item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 6rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: var(--clr-secondary);
+  margin-bottom: 2rem;
+}
+
+.forecast__item:last-of-type {
+  margin-bottom: 0;
+}
+
+.forecast__title {
+  display: flex;
+  align-items: center;
+}
+
+.forecast__title p{
+  margin-bottom: 0;
+}
+
+.forecast__title span {
+  margin-left: auto;
+  font-size: var(--fs-3);
+  font-weight: bold;
+}
+
+.forecast__temp {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-items: center;
+}
+
+.forecast__temp h2 {
+  font-weight: bold;
+  color: var(--clr-primary);
+  margin: auto 0;
+}
+
+.forecast__description {
+  text-align: center;
+}
