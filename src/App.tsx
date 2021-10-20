@@ -4,6 +4,7 @@ import { weatherApiKey } from './api/apiKey'
 import { getCurrentWeatherInformation, getForecastWeatherInformation } from  "./api/index"
 import { WeatherForecast } from './types'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import styled from 'styled-components'
 import Forecast from './components/Forecast'
 
@@ -64,22 +65,21 @@ function App() {
             return errors;
           }}
           onSubmit={(values, {setSubmitting}) => {
-            setTimeout(() => {
-              setSubmitting(false);
-              getCurrentWeatherInformation(values.city, weatherApiKey, temperatureSystem())
-                .then(({coord}) => {
-                  console.log()
-                  const {lat, lon} = coord;
-                  getForecastWeatherInformation(lat, lon, weatherApiKey, temperatureSystem())
+            getCurrentWeatherInformation(values.city, weatherApiKey, temperatureSystem())
+              .then(({coord}) => {
+                const {lat, lon} = coord;
+                getForecastWeatherInformation(lat, lon, weatherApiKey, temperatureSystem())
                   .then((data) => {
+                    setIsDataReady(false)
                     console.log({data})
-                    setWeatherData(data.current)
-                    const weatherDataForFiveDays = data.daily.slice(0, 5)
+                    setWeatherData(() => data.current)
+                    const weatherDataForFiveDays = data.daily.slice(1, 6)
                     setWeatherData((previousState) => [previousState, ...weatherDataForFiveDays])
                     setIsDataReady(true)
+                    setSubmitting(false);
                   })
-                })
-            }, 400);
+              })
+              .catch((error) => console.log({error}))
           }}
           >
             {({
@@ -121,6 +121,7 @@ function App() {
         <Forecast isDataReady={isDataReady} weatherData={weatherData}
           temperatureUnitShortName={temperatureUnitShortName()} />
       </AppContainer>
+      <Footer />
     </div>
   )
 }
