@@ -44,14 +44,27 @@ function App() {
     temperatureUnit?: string;
   }
 
+  interface IGeoLocation {
+    lat: number;
+    lon: number;
+  }
+
   const [weatherData, setWeatherData] = useState<Array<WeatherForecast>>([])
   const [temperatureUnit, setTemperatureUnit] = useState('Celsius')
   const [isDataReady, setIsDataReady] = useState(false)
+  const [geoLocation, setGeoLocation] = useState<IGeoLocation>({lat: 0, lon: 0})
   const cities = ['Maputo', 'London', 'Luanda', 'Lisboa', 'Porto', 'Brasilia', 'New York']
   const errorMessage = ''
 
   const temperatureSystem = () => temperatureUnit === 'Celsius' ? 'metric': 'imperial'
+
   const temperatureUnitShortName = () => temperatureUnit === 'Celsius' ? 'C' : 'F'
+
+  const isGeoLocationDifferent = (oldGeoLocation: IGeoLocation, newLat: number, newLon: number) => {
+    const {lat: oldLat, lon: oldLon} = oldGeoLocation
+    if (oldLat === newLat && oldLon === newLon) return false
+    return true
+  }
 
   return (
     <div className="App">
@@ -68,7 +81,9 @@ function App() {
             getCurrentWeatherInformation(values.city, weatherApiKey, temperatureSystem())
               .then(({coord}) => {
                 const {lat, lon} = coord;
-                getForecastWeatherInformation(lat, lon, weatherApiKey, temperatureSystem())
+                setGeoLocation({lat, lon})
+                if (isGeoLocationDifferent(geoLocation, lat, lon)) {
+                  getForecastWeatherInformation(lat, lon, weatherApiKey, temperatureSystem())
                   .then((data) => {
                     setIsDataReady(false)
                     console.log({data})
@@ -76,8 +91,9 @@ function App() {
                     const weatherDataForFiveDays = data.daily.slice(1, 6)
                     setWeatherData((previousState) => [previousState, ...weatherDataForFiveDays])
                     setIsDataReady(true)
-                    setSubmitting(false);
+                    setSubmitting(false)
                   })
+                } else setSubmitting(false)
               })
               .catch((error) => console.log({error}))
           }}
