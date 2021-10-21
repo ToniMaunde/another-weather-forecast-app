@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Formik, Form, Field } from 'formik'
+import * as Yup from 'yup'
 import { weatherApiKey } from './api/apiKey'
 import { getCurrentWeatherInformation, getForecastWeatherInformation } from  "./api/index"
-import { WeatherForecast } from './types'
+import { WeatherForecast, IGeoLocation } from './types'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import styled from 'styled-components'
@@ -29,30 +30,36 @@ const SubmitButton = styled.button`
   }
 `
 
+const ErrorMessage = styled.span`
+  color: red;
+  font-size: var(--fs-3);
+  margin: -1rem 0 1rem 0;
+`
+
+const CurrentCity = styled.p`
+  font-size: var(--fs-6);
+  font-weight: 600;
+  text-align: center;
+  color: var(--clr-primary);
+  margin-bottom: 2rem;
+`
+
 function App() {
-  interface FormValues {
-    city: string;
-    temperatureUnit: string;
-  }
-
-  interface FormError {
-    city?: string;
-    temperatureUnit?: string;
-  }
-
-  interface IGeoLocation {
-    lat: number;
-    lon: number;
-  }
-
   const [weatherData, setWeatherData] = useState<Array<WeatherForecast>>([])
   const [temperatureUnit, setTemperatureUnit] = useState('')
   const [isDataReady, setIsDataReady] = useState(false)
   const [geoLocation, setGeoLocation] = useState<IGeoLocation>({lat: 0, lon: 0})
-  const cities = ['Maputo', 'London', 'Luanda', 'Lisboa', 'Porto', 'Brasilia', 'New York']
-  const errorMessage = ''
+  const [currentCityResults, setCurrentCity] = useState('')
+  const [cityNotFound, setCityNotFound] = useState(false)
 
-  const temperatureSystem = () => temperatureUnit === 'Celsius' ? 'metric': 'imperial'
+  const FormValidationSchema = Yup.object().shape({
+    city: Yup.string()
+      .required('Introduza o nome de uma cidade.'),
+    temp: Yup.string()
+      .required('Escolha uma unidade.')
+  })
+
+  const temperatureSystem = (): string => temperatureUnit === 'Celsius' ? 'metric' : 'imperial'
 
   const temperatureUnitShortName = () => temperatureUnit === 'Celsius' ? 'C' : 'F'
 
@@ -62,37 +69,50 @@ function App() {
     return true
   }
 
+  const temperatureUnitChanged = (newTemperatureUnit: string) => {
+    if (newTemperatureUnit !== temperatureUnit) return true
+    return false
+  }
+
+const getData = (values: {city: string, temp: string}, setSubmitting: Function) => {
+  getCurrentWeatherInformation(values.city, weatherApiKey, temperatureSystem())
+    .then(({coord}) => {
+      const {lat, lon} = coord;
+      setGeoLocation({lat, lon})
+
+      if (isGeoLocationDifferent(geoLocation, lat, lon) || temperatureUnitChanged(values.temp)) {
+        setTemperatureUnit(values.temp)
+
+        getForecastWeatherInformation(lat, lon, weatherApiKey, temperatureSystem())
+          .then((data) => {
+            setIsDataReady(false)
+            console.log({data})
+            setWeatherData(() => data.current)
+            const weatherDataForFiveDays = data.daily.slice(1, 6)
+            setWeatherData((previousState) => [previousState, ...weatherDataForFiveDays])
+            setIsDataReady(true)
+            setSubmitting(false)
+          })
+      } else setSubmitting(false)
+    })
+    .catch(() => {
+      setSubmitting(false)
+      setCityNotFound(true)
+    })
+}
+
   return (
     <div className="App">
       <Navbar />
       <AppContainer>
       <Formik
           initialValues={{city: '', temp: ''}}
-          validate={values => {
-            const errors: FormError = {};
-            if(!values.city) errors.city = errorMessage;
-            return errors;
-          }}
+          validationSchema= {FormValidationSchema}
           onSubmit={(values, {setSubmitting}) => {
-            console.log(values)
-            // getCurrentWeatherInformation(values.city, weatherApiKey, temperatureSystem())
-            //   .then(({coord}) => {
-            //     const {lat, lon} = coord;
-            //     setGeoLocation({lat, lon})
-            //     if (isGeoLocationDifferent(geoLocation, lat, lon)) {
-            //       getForecastWeatherInformation(lat, lon, weatherApiKey, temperatureSystem())
-            //       .then((data) => {
-            //         setIsDataReady(false)
-            //         console.log({data})
-            //         setWeatherData(() => data.current)
-            //         const weatherDataForFiveDays = data.daily.slice(1, 6)
-            //         setWeatherData((previousState) => [previousState, ...weatherDataForFiveDays])
-            //         setIsDataReady(true)
-            //         setSubmitting(false)
-            //       })
-            //     } else setSubmitting(false)
-            //   })
-            //   .catch((error) => console.log({error}))
+            setCityNotFound(false)
+            setTemperatureUnit(values.temp)
+            setCurrentCity(values.city)
+            getData(values, setSubmitting)
           }}
           >
             {({
@@ -110,7 +130,11 @@ function App() {
                   <span role="group" aria-labelledby="radio-group" className="temperature-unit">
                     <label className="radio">
                       <span className="radio__input">
-                        <Field type="radio" name="temp" value="Celsius"/>
+                        <Field
+                          type="radio"
+                          name="temp"
+                          value="Celsius"
+                        />
                         <span className="radio__control"></span>
                       </span>
                       <span className="radio__label">Celsius</span>
@@ -118,12 +142,17 @@ function App() {
 
                     <label className="radio">
                       <span className="radio__input">
-                        <Field type="radio" name="temp" value="Fahrenheit"/>
+                        <Field
+                          type="radio"
+                          name="temp"
+                          value="Fahrenheit"
+                        />
                         <span className="radio__control"></span>
                       </span>
                       <span className="radio__label">Fahrenheit</span>
                     </label>
                   </span>
+                  {errors.temp && (<ErrorMessage>{errors.temp}</ErrorMessage>)}
 
                   <label className="label">
                     Nome da cidade
@@ -131,22 +160,14 @@ function App() {
                       type="text"
                       inputMode="text"
                       name="city"
-                      required
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.city}
-                      list="city-list"
                     />
-                    <span>
-                      {errors.city && touched.city && errors.city}
-                    </span>
                   </label>
 
-                  <datalist id="city-list">
-                    {cities?.map((city, idx) => (
-                      <option value={city} key={idx}>{city}</option>
-                    ))}
-                  </datalist>
+                  {errors.city && (<ErrorMessage>{errors.city}</ErrorMessage>)}
+                  {cityNotFound && (<ErrorMessage>Nome da cidade inválido.</ErrorMessage>)}
 
                   <SubmitButton type="submit" disabled={isSubmitting}>
                     Ver previsão
@@ -155,8 +176,15 @@ function App() {
               )
             }}
         </Formik>
-        <Forecast isDataReady={isDataReady} weatherData={weatherData}
-          temperatureUnitShortName={temperatureUnitShortName()} />
+
+        {!cityNotFound && <CurrentCity>{currentCityResults}</CurrentCity>}
+
+        <Forecast
+          isDataReady={isDataReady}
+          cityNotFound={!cityNotFound}
+          weatherData={weatherData}
+          temperatureUnitShortName={temperatureUnitShortName()}
+        />
       </AppContainer>
       <Footer />
     </div>

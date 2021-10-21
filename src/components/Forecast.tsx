@@ -2,15 +2,16 @@ import { WeatherForecast } from "../types";
 
 interface ForecastProps {
   isDataReady: boolean;
+  cityNotFound: boolean;
   weatherData: Array<WeatherForecast>;
   temperatureUnitShortName: string
 }
 
 const Forecast = (props: ForecastProps) => {
-  const {isDataReady, weatherData, temperatureUnitShortName} = props;
+  const {isDataReady, cityNotFound, weatherData, temperatureUnitShortName} = props;
   return (
     <ul className="forecast">
-      {isDataReady && weatherData.map((wd, idx) => (
+      {isDataReady && cityNotFound && weatherData.map((wd, idx) => (
         <li className="forecast__item" key={idx}>
           <div className="forecast__title">
             <p>{idx === 0 ? 'Temperatura atual' : 'Tempo para'}</p>

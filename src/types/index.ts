@@ -22,3 +22,8 @@ export interface WeatherForecast {
   }>;
   wind_speed: number;
 }
+
+export interface IGeoLocation {
+  lat: number;
+  lon: number;
+}
