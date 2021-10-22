@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { weatherApiKey } from './api/apiKey'
@@ -45,7 +45,6 @@ const CurrentCity = styled.p`
 `
 
 function App() {
-  const [weatherData, setWeatherData] = useState<Array<WeatherForecast>>([])
   const [groupedWeatherData, setGroupedWeatherData] = useState<Array<GroupedWeatherForecast>>([])
   const [temperatureUnit, setTemperatureUnit] = useState('')
   const [isDataReady, setIsDataReady] = useState(false)
@@ -102,41 +101,38 @@ function App() {
     }
   }
 
+  const formattedDate = (epoch: number): string => {
+    return new Date(epoch * 1000)
+      .toLocaleDateString('pt-PT', {weekday: 'long', month: 'long', day: '2-digit'})
+  }
+
   const getAllDates = (array: Array<WeatherForecast>) => {
-    const allDates = array.map((d) => new Date(d.dt * 1000)
-      .toLocaleDateString('pt-PT', {weekday: 'long', 'month': 'long', day: '2-digit'}))
+    const allDates = array.map(d => formattedDate(d.dt))
+
     return {
       allDates,
       array
     }
   }
 
+  const removeDuplicates = (list: string[]) => {
+    const set = new Set<string>()
+    list.forEach((el) => set.add(el))
+    return new Array<string>(...set)
+  }
 
-  const removeDuplicatesAndGroup = (listOfDates: string[], array:Array<WeatherForecast>):Array<GroupedWeatherForecast> => {
-    const setForRemovingDuplicates = new Set<string>()
-    listOfDates.forEach((wd) => setForRemovingDuplicates.add(wd))
-    const arrayWithoutDuplicates: string[] = [...setForRemovingDuplicates]
+  const removeDuplicatesAndGroup = (listOfDates: string[], array:Array<WeatherForecast>)
+    : Array<GroupedWeatherForecast> => {
+    const arrayWithoutDuplicates: string[] = removeDuplicates(listOfDates)
 
-    const isAMatch = (wdf: WeatherForecast, aDate: string): boolean => {
-      const dateForComparison = new Date(wdf.dt! * 1000).toLocaleDateString('pt-PT', {weekday: 'long', month: 'long', day: '2-digit'})
-      return aDate === dateForComparison
-    }
+    const groupedData = arrayWithoutDuplicates.map(d => {
+      const temps = array.filter(dd => d === formattedDate(dd.dt))
 
-    const groupedData = arrayWithoutDuplicates.map((d) => {
-        // const tempsOnThisDay = weatherData.filter((dd) => d === new Date(dd.dt * 1000)
-        //   .toLocaleDateString('pt-PT', {weekday: 'long', month: 'long', day: '2-digit'}))
-        // console.log({d})
-        const temps = array.filter((dd)=>{
-          console.log("date1 :" , d)
-          console.log("date2 :" , dd)
-          return d === new Date(dd.dt * 1000)
-            .toLocaleDateString('pt-PT', {weekday: 'long', month: 'long', day: '2-digit'})
-        })
+      const result: GroupedWeatherForecast = {date: d,  weatherThroughOutDay: temps}
 
-        const result: GroupedWeatherForecast = {date: d,  weatherThroughOutDay: temps}
-
-        return result
+      return result
     })
+
     return groupedData
   }
 
@@ -147,7 +143,7 @@ function App() {
 
   const getData = (values: {city: string, temp: string}, setSubmitting: Function) => {
     getCurrentWeatherInformation(values.city, weatherApiKey, measurementSystem(values.temp))
-      .then((data) => {
+      .then(data => {
         setCityID(data.id)
 
         if (!isCityIDDifferent(cityID, data.id) && didTempUnitChange(values.temp)) {
@@ -160,18 +156,13 @@ function App() {
 
         } else if (isCityIDDifferent(cityID, data.id) || didTempUnitChange(values.temp)) {
           getForecastWeatherInformation(values.city, weatherApiKey, measurementSystem(values.temp))
-            .then((data) => {
-              console.log({data})
-              const forecastForFiveDays: Array<WeatherForecast> = data.list
+            .then(data => {
               setIsDataReady(false)
-              setWeatherData(() =>{ 
-                setGroupedWeatherData([...groupWeatherForecastData([...forecastForFiveDays])])
-                return [...forecastForFiveDays]
-              })
-              // const groupedData = groupWeatherForecastData(forecastForFiveDays)
-              setGroupedWeatherData(() => [...groupWeatherForecastData(weatherData)])
+              const forecastForFiveDays: Array<WeatherForecast> = data.list
+              setGroupedWeatherData(() => [...groupWeatherForecastData(forecastForFiveDays)])
               setIsDataReady(true)
               setSubmitting(false)
+              console.log({data})
             })
         } else setSubmitting(false)
       })
