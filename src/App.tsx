@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { weatherApiKey } from './api/apiKey'
 import { getCurrentWeatherInformation, getForecastWeatherInformation } from  "./api/index"
-import { WeatherForecast, IGeoLocation } from './types'
+import { WeatherForecast, GroupedWeatherForecast } from './types'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import styled from 'styled-components'
@@ -46,11 +46,13 @@ const CurrentCity = styled.p`
 
 function App() {
   const [weatherData, setWeatherData] = useState<Array<WeatherForecast>>([])
+  const [groupedWeatherData, setGroupedWeatherData] = useState<Array<GroupedWeatherForecast>>([])
   const [temperatureUnit, setTemperatureUnit] = useState('')
   const [isDataReady, setIsDataReady] = useState(false)
-  const [geoLocation, setGeoLocation] = useState<IGeoLocation>({lat: 0, lon: 0})
+  const [cityID, setCityID] = useState<number>(0)
   const [currentCityResults, setCurrentCity] = useState('')
   const [cityNotFound, setCityNotFound] = useState(false)
+
 
   const FormValidationSchema = Yup.object().shape({
     city: Yup.string()
@@ -59,7 +61,7 @@ function App() {
       .required('Escolha uma unidade.')
   })
 
-  const temperatureSystem = (temp: string): string => {
+  const measurementSystem = (temp: string): string => {
     if (temp === 'Celsius') return 'metric'
     return 'imperial'
   }
@@ -69,13 +71,12 @@ function App() {
     return 'F'
   }
 
-  const isGeoLocationDifferent = (oldGeoLocation: IGeoLocation, newLat: number, newLon: number) => {
-    const {lat: oldLat, lon: oldLon} = oldGeoLocation
-    if (oldLat === newLat && oldLon === newLon) return false
+  const isCityIDDifferent = (oldCityID: number, newCityID: number) => {
+    if (oldCityID === newCityID) return false
     return true
   }
 
-  const temperatureUnitChanged = (newTemperatureUnit: string) => {
+  const didTempUnitChange = (newTemperatureUnit: string) => {
     if (newTemperatureUnit !== temperatureUnit) return true
     return false
   }
@@ -86,32 +87,70 @@ function App() {
   }
 
   const newWeatherDataMapper = (wd: WeatherForecast, temp: string) => {
-    const newMin = convertTemperature(wd.temp.min, temp)
-    const newMax = convertTemperature(wd.temp.max, temp)
+    const newMin = convertTemperature(wd.main.temp_min, temp)
+    const newMax = convertTemperature(wd.main.temp_max, temp)
 
     return {
       dt: wd.dt,
-      feels_like: wd.feels_like,
-      humidity: wd.humidity,
       weather: wd.weather,
-      wind_speed: wd.wind_speed,
-      temp: {
-        day: wd.temp.day,
-        morn: wd.temp.morn,
-        night: wd.temp.night,
-        min: parseFloat(newMin),
-        max: parseFloat(newMax)
+      main: {
+        temp: wd.main.temp,
+        feels_like: wd.main.feels_like,
+        temp_min: parseFloat(newMin),
+        temp_max: parseFloat(newMax)
       }
     }
   }
 
-  const getData = (values: {city: string, temp: string}, setSubmitting: Function) => {
-    getCurrentWeatherInformation(values.city, weatherApiKey, temperatureSystem(values.temp))
-      .then(({coord}) => {
-        const {lat, lon} = coord;
-        setGeoLocation({lat, lon})
+  const getAllDates = (array: Array<WeatherForecast>) => {
+    const allDates = array.map((d) => new Date(d.dt * 1000)
+      .toLocaleDateString('pt-PT', {weekday: 'long', 'month': 'long', day: '2-digit'}))
+    return {
+      allDates,
+      array
+    }
+  }
 
-        if (!isGeoLocationDifferent(geoLocation, lat, lon) && temperatureUnitChanged(values.temp)) {
+
+  const removeDuplicatesAndGroup = (listOfDates: string[], array:Array<WeatherForecast>):Array<GroupedWeatherForecast> => {
+    const setForRemovingDuplicates = new Set<string>()
+    listOfDates.forEach((wd) => setForRemovingDuplicates.add(wd))
+    const arrayWithoutDuplicates: string[] = [...setForRemovingDuplicates]
+
+    const isAMatch = (wdf: WeatherForecast, aDate: string): boolean => {
+      const dateForComparison = new Date(wdf.dt! * 1000).toLocaleDateString('pt-PT', {weekday: 'long', month: 'long', day: '2-digit'})
+      return aDate === dateForComparison
+    }
+
+    const groupedData = arrayWithoutDuplicates.map((d) => {
+        // const tempsOnThisDay = weatherData.filter((dd) => d === new Date(dd.dt * 1000)
+        //   .toLocaleDateString('pt-PT', {weekday: 'long', month: 'long', day: '2-digit'}))
+        // console.log({d})
+        const temps = array.filter((dd)=>{
+          console.log("date1 :" , d)
+          console.log("date2 :" , dd)
+          return d === new Date(dd.dt * 1000)
+            .toLocaleDateString('pt-PT', {weekday: 'long', month: 'long', day: '2-digit'})
+        })
+
+        const result: GroupedWeatherForecast = {date: d,  weatherThroughOutDay: temps}
+
+        return result
+    })
+    return groupedData
+  }
+
+  const groupWeatherForecastData = (data: Array<WeatherForecast>) => {
+    const allDates = getAllDates(data)
+    return removeDuplicatesAndGroup(allDates.allDates, allDates.array)
+  }
+
+  const getData = (values: {city: string, temp: string}, setSubmitting: Function) => {
+    getCurrentWeatherInformation(values.city, weatherApiKey, measurementSystem(values.temp))
+      .then((data) => {
+        setCityID(data.id)
+
+        if (!isCityIDDifferent(cityID, data.id) && didTempUnitChange(values.temp)) {
           setWeatherData((currentData) => {
             const newWeatherData = currentData.map(wd => newWeatherDataMapper(wd, values.temp))
             return newWeatherData
@@ -119,19 +158,25 @@ function App() {
           setIsDataReady(true)
           setSubmitting(false)
 
-        } else if (isGeoLocationDifferent(geoLocation, lat, lon) || temperatureUnitChanged(values.temp)) {
-          getForecastWeatherInformation(lat, lon, weatherApiKey, temperatureSystem(values.temp))
+        } else if (isCityIDDifferent(cityID, data.id) || didTempUnitChange(values.temp)) {
+          getForecastWeatherInformation(values.city, weatherApiKey, measurementSystem(values.temp))
             .then((data) => {
               console.log({data})
+              const forecastForFiveDays: Array<WeatherForecast> = data.list
               setIsDataReady(false)
-              const weatherDataForFiveDays = data.daily.slice(0, 5)
-              setWeatherData(() => [...weatherDataForFiveDays])
+              setWeatherData(() =>{ 
+                setGroupedWeatherData([...groupWeatherForecastData([...forecastForFiveDays])])
+                return [...forecastForFiveDays]
+              })
+              // const groupedData = groupWeatherForecastData(forecastForFiveDays)
+              setGroupedWeatherData(() => [...groupWeatherForecastData(weatherData)])
               setIsDataReady(true)
               setSubmitting(false)
             })
         } else setSubmitting(false)
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log({error})
         setSubmitting(false)
         setCityNotFound(true)
       })
@@ -216,12 +261,12 @@ function App() {
 
         {!cityNotFound && <CurrentCity>{currentCityResults}</CurrentCity>}
 
-        <Forecast
+        {/* <Forecast
           isDataReady={isDataReady}
-          cityNotFound={!cityNotFound}
+          cityNotFound={cityNotFound}
           weatherData={weatherData}
           temperatureUnitShortName={temperatureUnitShortName()}
-        />
+        /> */}
       </AppContainer>
       <Footer />
     </div>

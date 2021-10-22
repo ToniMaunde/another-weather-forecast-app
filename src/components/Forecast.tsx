@@ -1,4 +1,5 @@
-import { WeatherForecast } from "../types";
+import { useEffect } from "react";
+import { WeatherForecast, GroupedWeatherForecast } from "../types";
 
 interface ForecastProps {
   isDataReady: boolean;
@@ -9,9 +10,10 @@ interface ForecastProps {
 
 const Forecast = (props: ForecastProps) => {
   const {isDataReady, cityNotFound, weatherData, temperatureUnitShortName} = props;
+
   return (
     <ul className="forecast">
-      {isDataReady && cityNotFound && weatherData.map((wd, idx) => (
+      {isDataReady && !cityNotFound && weatherData.map((wd, idx) => (
         <li className="forecast__item" key={idx}>
           <div className="forecast__title">
             <p>
@@ -21,7 +23,7 @@ const Forecast = (props: ForecastProps) => {
             </p>
           </div>
           <div className="forecast__temp">
-            <h2>{`${wd.temp.max} / ${wd.temp.min}° ${temperatureUnitShortName}`}</h2>
+            <h2>{`${wd.main.temp_max} / ${wd.main.temp_min}° ${temperatureUnitShortName}`}</h2>
             <img src={`https://openweathermap.org/img/wn/${wd.weather[0].icon}@2x.png`} alt={wd.weather[0].description} />
           </div>
           <p className="forecast__description">

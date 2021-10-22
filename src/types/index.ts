@@ -1,18 +1,10 @@
 export interface WeatherForecast {
   dt: number;
-  feels_like: {
-    day: number;
-    night: number;
-    eve: number;
-    morn: number;
-  };
-  humidity: number;
-  temp: {
-    day: number;
-    min: number;
-    max: number;
-    morn: number;
-    night: number;
+  main: {
+    temp: number;
+    feels_like: number;
+    temp_min: number;
+    temp_max: number;
   };
   weather: Array<{
     id: 500;
@@ -20,10 +12,9 @@ export interface WeatherForecast {
     description: string;
     icon: string;
   }>;
-  wind_speed: number;
 }
 
-export interface IGeoLocation {
-  lat: number;
-  lon: number;
+export interface GroupedWeatherForecast {
+  date: string;
+  weatherThroughOutDay: Array<WeatherForecast>;
 }
