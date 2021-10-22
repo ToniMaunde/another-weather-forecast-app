@@ -59,9 +59,15 @@ function App() {
       .required('Escolha uma unidade.')
   })
 
-  const temperatureSystem = (): string => temperatureUnit === 'Celsius' ? 'metric' : 'imperial'
+  const temperatureSystem = (temp: string): string => {
+    if (temp === 'Celsius') return 'metric'
+    return 'imperial'
+  }
 
-  const temperatureUnitShortName = () => temperatureUnit === 'Celsius' ? 'C' : 'F'
+  const temperatureUnitShortName = () => {
+    if (temperatureUnit === 'Celsius') return 'C'
+    return 'F'
+  }
 
   const isGeoLocationDifferent = (oldGeoLocation: IGeoLocation, newLat: number, newLon: number) => {
     const {lat: oldLat, lon: oldLon} = oldGeoLocation
@@ -74,32 +80,62 @@ function App() {
     return false
   }
 
-const getData = (values: {city: string, temp: string}, setSubmitting: Function) => {
-  getCurrentWeatherInformation(values.city, weatherApiKey, temperatureSystem())
-    .then(({coord}) => {
-      const {lat, lon} = coord;
-      setGeoLocation({lat, lon})
+  const convertTemperature = (temp: number, newUnit: string): string => {
+    if (newUnit === 'Fahrenheit') return ((temp * (9/5)) + 32).toFixed(2)
+    return ((temp - 32) * 5/9).toFixed(2)
+  }
 
-      if (isGeoLocationDifferent(geoLocation, lat, lon) || temperatureUnitChanged(values.temp)) {
-        setTemperatureUnit(values.temp)
+  const newWeatherDataMapper = (wd: WeatherForecast, temp: string) => {
+    const newMin = convertTemperature(wd.temp.min, temp)
+    const newMax = convertTemperature(wd.temp.max, temp)
 
-        getForecastWeatherInformation(lat, lon, weatherApiKey, temperatureSystem())
-          .then((data) => {
-            setIsDataReady(false)
-            console.log({data})
-            setWeatherData(() => data.current)
-            const weatherDataForFiveDays = data.daily.slice(1, 6)
-            setWeatherData((previousState) => [previousState, ...weatherDataForFiveDays])
-            setIsDataReady(true)
-            setSubmitting(false)
+    return {
+      dt: wd.dt,
+      feels_like: wd.feels_like,
+      humidity: wd.humidity,
+      weather: wd.weather,
+      wind_speed: wd.wind_speed,
+      temp: {
+        day: wd.temp.day,
+        morn: wd.temp.morn,
+        night: wd.temp.night,
+        min: parseFloat(newMin),
+        max: parseFloat(newMax)
+      }
+    }
+  }
+
+  const getData = (values: {city: string, temp: string}, setSubmitting: Function) => {
+    getCurrentWeatherInformation(values.city, weatherApiKey, temperatureSystem(values.temp))
+      .then(({coord}) => {
+        const {lat, lon} = coord;
+        setGeoLocation({lat, lon})
+
+        if (!isGeoLocationDifferent(geoLocation, lat, lon) && temperatureUnitChanged(values.temp)) {
+          setWeatherData((currentData) => {
+            const newWeatherData = currentData.map(wd => newWeatherDataMapper(wd, values.temp))
+            return newWeatherData
           })
-      } else setSubmitting(false)
-    })
-    .catch(() => {
-      setSubmitting(false)
-      setCityNotFound(true)
-    })
-}
+          setIsDataReady(true)
+          setSubmitting(false)
+
+        } else if (isGeoLocationDifferent(geoLocation, lat, lon) || temperatureUnitChanged(values.temp)) {
+          getForecastWeatherInformation(lat, lon, weatherApiKey, temperatureSystem(values.temp))
+            .then((data) => {
+              console.log({data})
+              setIsDataReady(false)
+              const weatherDataForFiveDays = data.daily.slice(0, 5)
+              setWeatherData(() => [...weatherDataForFiveDays])
+              setIsDataReady(true)
+              setSubmitting(false)
+            })
+        } else setSubmitting(false)
+      })
+      .catch(() => {
+        setSubmitting(false)
+        setCityNotFound(true)
+      })
+  }
 
   return (
     <div className="App">
@@ -109,8 +145,8 @@ const getData = (values: {city: string, temp: string}, setSubmitting: Function) 
           initialValues={{city: '', temp: ''}}
           validationSchema= {FormValidationSchema}
           onSubmit={(values, {setSubmitting}) => {
-            setCityNotFound(false)
             setTemperatureUnit(values.temp)
+            setCityNotFound(false)
             setCurrentCity(values.city)
             getData(values, setSubmitting)
           }}
@@ -163,6 +199,7 @@ const getData = (values: {city: string, temp: string}, setSubmitting: Function) 
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.city}
+                      autoComplete="false"
                     />
                   </label>
 
