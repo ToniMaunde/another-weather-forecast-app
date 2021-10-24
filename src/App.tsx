@@ -188,7 +188,6 @@ function App() {
         } else setSubmitting(false)
       })
       .catch((error) => {
-        console.log({error})
         setSubmitting(false)
         setCityNotFound(true)
       })

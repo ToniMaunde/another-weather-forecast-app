@@ -34,7 +34,6 @@ export const getCityTemperatureMap = async (zoomLevel: number, apiKey: string): 
     )
     return `data:image/png;base64,${b64Data}`
   } catch (error) {
-    console.log({error})
     return ''
   }
 }

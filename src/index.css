@@ -278,6 +278,7 @@ span {
   grid-template-columns: min-content auto;
   grid-gap: 0.5em;
   align-items: center;
+  cursor: pointer;
 }
 
 .radio__input {
