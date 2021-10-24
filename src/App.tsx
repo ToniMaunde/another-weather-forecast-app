@@ -211,6 +211,7 @@ function App() {
               errors,
               handleChange,
               handleBlur,
+              touched,
               handleSubmit,
               isSubmitting
             }) => {
@@ -244,7 +245,7 @@ function App() {
                       <span className="radio__label">Fahrenheit</span>
                     </label>
                   </span>
-                  {errors.temp && (<ErrorMessage>{errors.temp}</ErrorMessage>)}
+                  {errors.temp && touched.temp && (<ErrorMessage>{errors.temp}</ErrorMessage>)}
 
                   <span className="input-and-button">
                     <label className="label">
@@ -267,7 +268,7 @@ function App() {
                       </SubmitButton>
                     </label>
 
-                    {errors.city && (
+                    {errors.city && touched.city && (
                       <>
                         <ErrorMessage>{errors.city}</ErrorMessage> <br />
                       </>
