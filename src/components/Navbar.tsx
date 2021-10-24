@@ -22,12 +22,15 @@ const LogoSecondaryText = styled.span`
   font-weight: 600;
   color: var(--clr-secondary);
 `
+const LogoImage = styled.img`
+  width: fit-content;
+`
 
 const Navbar = () => {
   return (
     <Nav>
       <Ul>
-        <img src={logoImg} alt="img logo" /> <Logo>wit <LogoSecondaryText>Weather</LogoSecondaryText></Logo>
+        <LogoImage src={logoImg} alt="img logo" /> <Logo>wit <LogoSecondaryText>Weather</LogoSecondaryText></Logo>
       </Ul>
     </Nav>
   )
