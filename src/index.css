@@ -199,15 +199,6 @@ span {
   color: #FFFFFF;
 }
 
-.forecast {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin: 0 auto;
-  background-color: var(--clr-tertiary);
-  border-radius: 10px;
-}
-
 .forecast__item {
   display: flex;
   flex-direction: column;
