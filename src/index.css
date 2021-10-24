@@ -236,10 +236,6 @@ span {
   scrollbar-width: none;
 }
 
-.forecast__temps::-webkit-scrollbar {
-  display: none;
-}
-
 .forecast__temp-period {
   display: flex;
   flex-direction: column;

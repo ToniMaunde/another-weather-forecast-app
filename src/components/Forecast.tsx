@@ -45,12 +45,17 @@ const ForecastContainer = styled.ul`
       .forecast__temp-period {
         margin-right: 1.6rem;
         margin-left: 0;
+        min-width: 56.61px;
       }
     }
 
     img {
       width: 4rem;
       height: auto;
+    }
+
+    .forecast__temps::-webkit-scrollbar {
+      display: none;
     }
   }
 
