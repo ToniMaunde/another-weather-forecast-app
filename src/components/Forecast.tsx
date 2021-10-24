@@ -98,7 +98,7 @@ const Forecast = (props: ForecastProps) => {
               <span className="forecast__weekday">{wd.date}</span>
               {idx===0 ? (
                 <>
-                  <span className="forecast__min-max">{`${currentMinMax.max}° ${currentMinMax.min}°`}</span>
+                  <span className="forecast__min-max">{`${currentMinMax.max.toFixed(0)}° ${currentMinMax.min.toFixed(0)}°`}</span>
                   <img src={`${baseURL}${currentMinMax.icon}@2x.png`} />
                 </>
               ) : ''}
@@ -108,7 +108,7 @@ const Forecast = (props: ForecastProps) => {
                 <div className="forecast__temp-period" key={idx}>
                   <span className="forecast__time">{formattedTime(wtd.dt)}</span>
                   <img src={`${baseURL}${wtd.weather[0].icon}@2x.png`} alt={wtd.weather[0].description} />
-                  <span>{`${wtd.main.temp_max}°`}</span>
+                  <span>{`${wtd.main.temp_max.toFixed(0)}°`}</span>
                 </div>
               ))}
             </ul>
