@@ -256,7 +256,11 @@ function App() {
                       </SubmitButton>
                     </label>
 
-                    {errors.city && (<ErrorMessage>{errors.city}</ErrorMessage>)}
+                    {errors.city && (
+                      <>
+                        <ErrorMessage>{errors.city}</ErrorMessage> <br />
+                      </>
+                    )}
                     {cityNotFound && (<ErrorMessage>Nome da cidade inválido.</ErrorMessage>)}
                   </span>
                 </Form>
