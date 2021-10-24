@@ -5,9 +5,10 @@ const StyledFooter = styled.footer`
   flex-direction: column;
   align-items: center;
   justify-items: center;
-  background-color: var(--clr-secondary);
+  background-color: var(--clr-primary);
   padding: 1.6rem;
   margin-top: auto;
+  color: var(--clr-primary);
 `
 
 const Information = styled.span`
@@ -18,16 +19,15 @@ const Information = styled.span`
   text-align: center;
 `
 
-const Year = styled.p`
-  margin-bottom: 0;
+const ExternalLink = styled.a`
+  color: var(--clr-secondary);
 `
 
 const Footer = () => {
   return (
     <StyledFooter>
       <Information>
-        <a href="https://miltondavid.com" target="_blank" rel="noreferrer">miltondavid.com</a>
-        <Year>{new Date().getFullYear()}</Year>
+        <ExternalLink href="https://miltondavid.com" target="_blank" rel="noreferrer">miltondavid.com</ExternalLink>
       </Information>
     </StyledFooter>
   )

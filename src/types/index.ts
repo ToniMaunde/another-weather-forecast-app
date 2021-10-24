@@ -18,3 +18,9 @@ export interface GroupedWeatherForecast {
   date: string;
   weatherThroughOutDay: Array<WeatherForecast>;
 }
+
+export interface CurrentMinMax {
+  min: number;
+  max: number;
+  icon: string;
+}

@@ -1,8 +1,9 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
+import logoImg from '../assets/logo.svg'
 
 const Nav = styled.nav`
   display: flex;
-  background-color: var(--clr-secondary);
+  background-color: var(--clr-primary);
 `
 
 const Ul = styled.ul`
@@ -12,20 +13,21 @@ const Ul = styled.ul`
 `
 
 const Logo = styled.span`
-  font-weight: 600;
   font-size: var(--fs-6);
-  color: var(--clr-tertiary);
+  color: #FFFFFF;
+  margin-left: 12px;
 `
 
 const LogoSecondaryText = styled.span`
-  color: var(--clr-primary);
+  font-weight: 600;
+  color: var(--clr-secondary);
 `
 
 const Navbar = () => {
   return (
     <Nav>
       <Ul>
-        <Logo>wit <LogoSecondaryText>Weather</LogoSecondaryText></Logo>
+        <img src={logoImg} alt="img logo" /> <Logo>wit <LogoSecondaryText>Weather</LogoSecondaryText></Logo>
       </Ul>
     </Nav>
   )
