@@ -10,6 +10,18 @@ const Ul = styled.ul`
   display: flex;
   width: 100%;
   padding: 1.6rem;
+
+  @media(min-width: 768px) {
+    padding: 2rem 4.6rem 1rem 4.6rem;
+  }
+
+  @media(min-width: 1024px) {
+    padding: 4rem 8rem 1rem 8rem;
+  }
+
+  @media(min-width: 1440px) {
+    padding: 4rem 18rem 1rem 18rem;
+  }
 `
 
 const Logo = styled.span`

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Formik, Form, Field} from 'formik'
 import * as Yup from 'yup'
 import { weatherApiKey } from './api/apiKey'
@@ -15,6 +15,18 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 1.6rem;
+
+  @media(min-width: 768px) {
+    padding: 2rem 4.6rem;
+  }
+
+  @media(min-width: 1024px) {
+    padding: 4rem 8rem;
+  }
+
+  @media(min-width: 1440px) {
+    padding: 4rem 18rem;
+  }
 `
 
 const SubmitButton = styled.button`

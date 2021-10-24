@@ -16,6 +16,63 @@ const TemperatureMap = styled.div`
   margin-top: 2rem;
   border-radius: 10px;
   color: white;
+
+  @media(min-width: 768px) {
+    padding: 2rem;
+  }
+
+  @media(min-width: 1024px) {
+    padding: 4rem;
+  }
+`
+
+const ForecastContainer = styled.ul`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  background-color: var(--clr-tertiary);
+  border-radius: 10px;
+
+  @media(min-width: 768px) {
+    .forecast__item {
+      padding: 2rem 2rem 1rem 2rem;
+
+      .forecast__min-max {
+        margin-left: 10rem;
+      }
+
+      .forecast__temp-period {
+        margin-right: 1.6rem;
+        margin-left: 0;
+      }
+    }
+
+    img {
+      width: 4rem;
+      height: auto;
+    }
+  }
+
+  @media(min-width: 1024px) {
+    .forecast__item {
+      padding: 2rem 5rem 2rem 5rem;
+
+      .forecast__min-max {
+        margin-left: 15rem;
+      }
+
+      .forecast__temp-period {
+        margin-right: 1.6rem;
+        margin-left: 0;
+      }
+    }
+
+    img {
+      width: 4rem;
+      height: auto;
+    }
+  }
 `
 
 const Forecast = (props: ForecastProps) => {
@@ -34,7 +91,7 @@ const Forecast = (props: ForecastProps) => {
 
   return (
     <>
-      <ul className="forecast">
+      <ForecastContainer className="forecast">
         {isDataReady && !cityNotFound && groupedWeatherData.map((wd, idx) => (
           <li className="forecast__item" key={idx}>
             <div className="forecast__title">
@@ -57,7 +114,7 @@ const Forecast = (props: ForecastProps) => {
             </ul>
           </li>
         ))}
-      </ul>
+      </ForecastContainer>
       {isDataReady && !cityNotFound &&
         <TemperatureMap>
           <p>Mapa de Temperatura</p>
