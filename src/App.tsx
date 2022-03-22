@@ -9,47 +9,6 @@ import Footer from './components/Footer'
 import Forecast from './components/Forecast'
 import searchIcon from './assets/search.svg'
 
-const AppContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 0 1.6rem;
-
-  @media(min-width: 768px) {
-    padding: 2rem 4.6rem;
-  }
-
-  @media(min-width: 1024px) {
-    padding: 4rem 8rem;
-  }
-
-  @media(min-width: 1440px) {
-    padding: 4rem 18rem;
-  }
-`
-
-const SubmitButton = styled.button`
-  font-family: 'Montserrat', sans-serif;
-  width: fit-content;
-  padding: 0.6rem 1.2rem;
-  background-color: var(--clr-secondary);
-  border: none;
-  border-radius: 0 10px 10px 0;
-  z-index: 10;
-  top: 31px;
-  right: 3px;
-  position: absolute;
-  &:disabled {
-    background-color: var(--clr-tertiary);
-  }
-`
-
-const ErrorMessage = styled.span`
-  color: #cf7f7f;
-  font-size: var(--fs-3);
-  margin: -1rem 0 1rem 0;
-`
-
 function App() {
   const [groupedWeatherData, setGroupedWeatherData] = useState<Array<GroupedWeatherForecast>>([])
   const [temperatureUnit, setTemperatureUnit] = useState('')
@@ -193,101 +152,8 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Navbar />
-      <AppContainer>
-      <Formik
-          initialValues={{city: '', temp: ''}}
-          validationSchema= {FormValidationSchema}
-          onSubmit={(values, {setSubmitting}) => {
-            setTemperatureUnit(values.temp)
-            setCityNotFound(false)
-            getData(values, setSubmitting)
-          }}
-          >
-            {({
-              values,
-              errors,
-              handleChange,
-              handleBlur,
-              touched,
-              handleSubmit,
-              isSubmitting
-            }) => {
-              return (
-                <Form onSubmit={handleSubmit} className="form">
-                  <p>Temperatura em °</p>
-                  <span role="group" aria-labelledby="radio-group" className="temperature-unit">
-                    <label className="radio">
-                      <span className="radio__input">
-                        <Field
-                          type="radio"
-                          name="temp"
-                          value="Celsius"
-                          onChange={handleChange}
-                        />
-                        <span className="radio__control"></span>
-                      </span>
-                      <span className="radio__label">Celsius</span>
-                    </label>
-
-                    <label className="radio">
-                      <span className="radio__input">
-                        <Field
-                          type="radio"
-                          name="temp"
-                          value="Fahrenheit"
-                          onChange={handleChange}
-                        />
-                        <span className="radio__control"></span>
-                      </span>
-                      <span className="radio__label">Fahrenheit</span>
-                    </label>
-                  </span>
-                  {errors.temp && touched.temp && (<ErrorMessage>{errors.temp}</ErrorMessage>)}
-
-                  <span className="input-and-button">
-                    <label className="label">
-                      Nome da cidade
-                      <Field
-                        type="text"
-                        inputMode="text"
-                        name="city"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.city}
-                        autoComplete="false"
-                      />
-                      <SubmitButton type="submit" disabled={isSubmitting}>
-                        <img
-                          aria-hidden="true"
-                          src={searchIcon}
-                          alt="a search icon"
-                        />
-                      </SubmitButton>
-                    </label>
-
-                    {errors.city && touched.city && (
-                      <>
-                        <ErrorMessage>{errors.city}</ErrorMessage> <br />
-                      </>
-                    )}
-                    {cityNotFound && (<ErrorMessage>Nome da cidade inválido.</ErrorMessage>)}
-                  </span>
-                </Form>
-              )
-            }}
-        </Formik>
-
-        <Forecast
-          isDataReady={isDataReady}
-          cityNotFound={cityNotFound}
-          groupedWeatherData={groupedWeatherData}
-          currentMinMax={currentMinMax}
-          temperatureMap={temperatureMap}
-        />
-      </AppContainer>
-      <Footer />
+    <div>
+      App
     </div>
   )
 }
