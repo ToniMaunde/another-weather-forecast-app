@@ -6,7 +6,6 @@ import { getCurrentWeatherInformation, getForecastWeatherInformation, getCityTem
 import { WeatherForecast, GroupedWeatherForecast, CurrentMinMax } from './types'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import styled from 'styled-components'
 import Forecast from './components/Forecast'
 import searchIcon from './assets/search.svg'
 
