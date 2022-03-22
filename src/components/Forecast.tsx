@@ -120,12 +120,6 @@ const Forecast = (props: ForecastProps) => {
           </li>
         ))}
       </ForecastContainer>
-      {isDataReady && !cityNotFound &&
-        <TemperatureMap>
-          <p>Mapa de Temperatura</p>
-          {temperatureMap.length > 0 && (<img src={temperatureMap} alt="temperature map"/>) }
-        </TemperatureMap>
-      }
     </>
   )
 }
