@@ -19,8 +19,9 @@ export const getForecastWeatherInformation = async (city: string, apiKey: string
   try {
     const result = await fetch(URL, requestHeaders);
     return await result.json();
-  } catch (error) {
-    console.log({ error });
+  } catch (err) {
+    console.log({ err });
+    return { error: true, errorMessage: err };
   }
 };
 
