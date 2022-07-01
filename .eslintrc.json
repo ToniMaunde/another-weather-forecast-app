@@ -25,6 +25,7 @@
       "react/jsx-filename-extension": [1, { "extensions": [".js", ".ts", ".tsx"] }],
       "react/react-in-jsx-scope": 0,
       "no-undef": "off",
-      "import/extensions": 0
+      "import/extensions": 0,
+      "quotes": [1, "double"]
     }
 }
