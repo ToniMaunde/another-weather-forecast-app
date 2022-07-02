@@ -141,7 +141,7 @@ function App() {
   return (
     <main className="w-full h-full m-0 p-0 flex flex-col bg-dark">
       <Navbar />
-      <form className="mt-4 px-3 flex flex-col">
+      <form className="mt-4 px-7 flex flex-col">
         <div className="mb-6">
           <p className="text-light font-semibold">Temperature in °</p>
           <div className="flex space-x-8">
