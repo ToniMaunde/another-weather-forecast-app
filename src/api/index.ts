@@ -1,6 +1,8 @@
-export const weatherApiKey = 'e4a63df5a4014b8ea7e01ba065c72d44';
+import APIKey from "../API_KEY";
 
-const requestHeaders: RequestInit = { method: 'GET', mode: 'cors' };
+const weatherApiKey = process.env.API_KEY || APIKey;
+
+const requestHeaders: RequestInit = { method: "GET", mode: "cors" };
 
 export const getCurrentWeatherInformation = async (city: string, apiKey: string, measurementSystem: string) => {
   const URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${measurementSystem}&appid=${apiKey}`;
@@ -33,10 +35,10 @@ export const getCityTemperatureMap = async (zoomLevel: number, apiKey: string): 
     const arrayBuffer = await result.arrayBuffer();
     const b64Data = btoa(
       new Uint8Array(arrayBuffer)
-        .reduce((dataArray, byte) => `${dataArray}${String.fromCharCode(byte)}`, ''),
+        .reduce((dataArray, byte) => `${dataArray}${String.fromCharCode(byte)}`, ""),
     );
     return `data:image/png;base64,${b64Data}`;
   } catch (error) {
-    return '';
+    return "";
   }
 };
