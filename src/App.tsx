@@ -6,6 +6,7 @@
 import { Icon } from "./components/Icon";
 import searchIcon from "./assets/search";
 import Navbar from "./components/Navbar";
+import Forecast from "./components/Forecast";
 
 function App() {
   // const [groupedWeatherData, setGroupedWeatherData] = useState<Array<GroupedWeatherForecast>>([]);
@@ -185,6 +186,8 @@ function App() {
           </div>
         </label>
       </form>
+
+      <Forecast />
     </main>
   );
 }

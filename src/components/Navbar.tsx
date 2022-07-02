@@ -10,9 +10,7 @@ export default function Navbar() {
         <Icon {...logoIcon} customClasses="mr-1 flex-shrink-0 w-7 h-auto fill-primary"/>
         Weather&nbsp;<span className="font-semibold text-primary">App</span>
       </div>
-
       <ModeToggler classes="ml-auto mr-6 cursor-pointer" />
-
       <LanguageSwitcher />
     </nav>
   )

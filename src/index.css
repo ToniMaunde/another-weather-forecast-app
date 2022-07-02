@@ -11,3 +11,7 @@
         url("/fonts/inter.woff2") format("woff2"),
         url("/fonts/inter.woff") format("woff");
 }
+
+.forecast-shadows {
+  box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.15);
+}
