@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { GroupedWeatherForecast, CurrentMinMax } from '../types';
 
 interface ForecastProps {
@@ -8,77 +7,6 @@ interface ForecastProps {
   currentMinMax: CurrentMinMax;
   temperatureMap: string;
 }
-
-const TemperatureMap = styled.div`
-  width: 100%;
-  background-color: var(--clr-tertiary);
-  padding: 1rem;
-  margin-top: 2rem;
-  border-radius: 10px;
-  color: white;
-
-  @media(min-width: 768px) {
-    padding: 2rem;
-  }
-
-  @media(min-width: 1024px) {
-    padding: 4rem;
-  }
-`
-
-const ForecastContainer = styled.ul`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin: 0 auto;
-  background-color: var(--clr-tertiary);
-  border-radius: 10px;
-
-  @media(min-width: 768px) {
-    .forecast__item {
-      padding: 2rem 2rem 1rem 2rem;
-
-      .forecast__min-max {
-        margin-left: 10rem;
-      }
-
-      .forecast__temp-period {
-        margin-right: 1.6rem;
-        margin-left: 0;
-        min-width: 56.61px;
-      }
-    }
-
-    img {
-      width: 4rem;
-      height: auto;
-    }
-
-    .forecast__temps::-webkit-scrollbar {
-      display: none;
-    }
-  }
-
-  @media(min-width: 1024px) {
-    .forecast__item {
-      padding: 2rem 5rem 2rem 5rem;
-
-      .forecast__min-max {
-        margin-left: 15rem;
-      }
-
-      .forecast__temp-period {
-        margin-right: 1.6rem;
-        margin-left: 0;
-      }
-    }
-
-    img {
-      width: 4rem;
-      height: auto;
-    }
-  }
-`
 
 const Forecast = (props: ForecastProps) => {
   const {
