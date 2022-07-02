@@ -4,6 +4,8 @@
 // import Forecast from "./components/Forecast";
 // import searchIcon from "./assets/search.svg";
 
+import Navbar from "./components/Navbar";
+
 function App() {
   // const [groupedWeatherData, setGroupedWeatherData] = useState<Array<GroupedWeatherForecast>>([]);
   // const [temperatureUnit, setTemperatureUnit] = useState("");
@@ -137,7 +139,7 @@ function App() {
 
   return (
     <main className="w-full h-full m-0 p-0 flex flex-col bg-dark">
-      App
+      <Navbar />
     </main>
   );
 }
