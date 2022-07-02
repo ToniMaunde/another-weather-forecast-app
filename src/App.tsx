@@ -2,8 +2,9 @@
 // import { getCurrentWeatherInformation } from "./api";
 // import { WeatherForecast, GroupedWeatherForecast, CurrentMinMax } from "./types";
 // import Forecast from "./components/Forecast";
-// import searchIcon from "./assets/search.svg";
 
+import { Icon } from "./components/Icon";
+import searchIcon from "./assets/search";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -140,6 +141,50 @@ function App() {
   return (
     <main className="w-full h-full m-0 p-0 flex flex-col bg-dark">
       <Navbar />
+      <form className="mt-4 px-3 flex flex-col">
+        <div className="mb-6">
+          <p className="text-light font-semibold">Temperature in °</p>
+          <div className="flex space-x-8">
+            <label htmlFor="celsius" className="text-secondary cursor-pointer">
+              <input
+                className="accent-primary cursor-pointer"
+                type="radio"
+                name="temperatureUnit"
+                value="C"
+                id="celsius"
+                required
+              /> Celsius
+            </label>
+            <label htmlFor="fahrenheit" className="text-secondary cursor-pointer">
+              <input
+                className="accent-primary cursor-pointer"
+                type="radio"
+                name="temperatureUnit"
+                value="F"
+                id="fahrenheit"
+                required
+              /> Fahrenheit
+            </label>
+          </div>
+        </div>
+
+        <label htmlFor="city" className="flex flex-col text-light font-semibold">
+          Name of the city
+          <div className="mt-1 grid grid-cols-8">
+            <input
+              className="col-span-7 p-2 w-full font-normal rounded rounded-tr-none rounded-br-none text-dark focus-visible:outline-primary focus-visible:outline-1"
+              type="text"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-primary grid place-items-center rounded-tr rounded-br"
+            >
+              <Icon {...searchIcon} customClasses="w-8 h-auto fill-dark" />
+            </button>
+          </div>
+        </label>
+      </form>
     </main>
   );
 }
