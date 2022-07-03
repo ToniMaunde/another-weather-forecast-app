@@ -1,10 +1,9 @@
-import APIKey from "../API_KEY";
 import type { WeatherForecast } from "../types";
 
-let weatherAPIKey = APIKey;
+let weatherAPIKey = "";
 if (process.env.NODE_ENV === "production") {
   weatherAPIKey = process.env.API_KEY as string;
-}
+} else weatherAPIKey = import.meta.env.VITE_API_KEY as string;
 
 const HEADERS: RequestInit = { method: "GET", mode: "cors" };
 
