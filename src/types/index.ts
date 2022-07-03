@@ -22,6 +22,32 @@ export type HourForecast = {
   }
 }
 
+// HourForecastWithMeasurementSystem
+export type HourForecastWithMS = {
+  measurementSystem: string;
+  dt: number;
+  dt_txt: string;
+  main: {
+    feels_like: number;
+    temp: number;
+    humidity: number;
+    pressure: number;
+    temp_min: number;
+    temp_max: number;
+  };
+  weather: Array<{
+    description: string;
+    icon: string;
+    id: number;
+    main: string;
+  }>;
+  wind: {
+    deg: number;
+    gust: number;
+    speed: number;
+  }
+}
+
 export type WeatherForecast = {
   city: {
     id: number;

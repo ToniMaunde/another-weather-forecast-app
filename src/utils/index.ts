@@ -1,11 +1,4 @@
-import type { GroupedWeatherForecast, HourForecast } from "../types";
-
-export function convertTo(newTemperatureUnit: string, temperature: number): string {
-  if (newTemperatureUnit === "Fahrenheit") {
-    return ((temperature * (9 / 5)) + 32).toFixed(2);
-  };
-  return ((temperature - 32) * 5 / 9).toFixed(2);
-};
+import type { GroupedWeatherForecast, HourForecast, HourForecastWithMS } from "../types";
 
 function epochToDateString(epoch: number){
   const dateFromEpoch = new Date(epoch * 1000);
@@ -35,21 +28,63 @@ function dedupe(listOfDuplicates: string[]) {
   return new Array<string>(...set);
 };
 
-function groupForecastDataByDates(arrayOfDates: string[], forecastData: HourForecast[]): GroupedWeatherForecast[] {
+export function addMeasurementSystem(forecastData: HourForecast[], measurementSystem: string): HourForecastWithMS[] {
+  return forecastData.map(forecast => ({...forecast, measurementSystem}))
+};
+
+function convertTo(measurementSystem: string, temperature: number) {
+  if (measurementSystem === "imperial") {
+    return ((temperature * (9 / 5)) + 32).toFixed(2);
+  };
+  return ((temperature - 32) * 5 / 9).toFixed(2);
+};
+
+function recalculateForecastDataForDate(forecastData: HourForecastWithMS[], newMeasurmentSystem: string): HourForecastWithMS[] {
+  return forecastData.map(forecast => {
+    const newTemps = {
+      feels_like: parseFloat(convertTo(newMeasurmentSystem, forecast.main.feels_like)),
+      temp: parseFloat(convertTo(newMeasurmentSystem, forecast.main.temp)),
+      temp_min: parseFloat(convertTo(newMeasurmentSystem, forecast.main.temp_min)),
+      temp_max: parseFloat(convertTo(newMeasurmentSystem, forecast.main.temp_max)),
+      humidity: forecast.main.humidity,
+      pressure: forecast.main.pressure
+    };
+
+    return {
+      ...forecast,
+      main: newTemps
+    }
+  });
+};
+
+function groupForecastDataByDates(arrayOfDates: string[], forecastData: HourForecastWithMS[], newMeasurementSystem: string): GroupedWeatherForecast[] {
   const groupedForecastData = arrayOfDates.map(date => {
     const forecastDataForDate = forecastData.filter(forecast => {
       const forecastDateFromEpoch = epochToDateString(forecast.dt);
-      return forecastDateFromEpoch === date; 
+      return forecastDateFromEpoch === date;
     });
+    /*
+      Check if the initial measurement system in place is the same as the one currently 
+      selected by the user. If it is different, recalculate the values
+    */
+    const [{ measurementSystem }] = forecastDataForDate;
+    if(measurementSystem === newMeasurementSystem) {
+      return {
+        date,
+        forecastInIntervals: forecastDataForDate
+      };
+    }
+
+    const recalculatedForecastDataForDate = recalculateForecastDataForDate(forecastDataForDate, newMeasurementSystem)
     return {
       date,
-      forecastInIntervals: forecastDataForDate
+      forecastInIntervals: recalculatedForecastDataForDate
     };
   });
   return groupedForecastData;
 };
 
-export function groupWeatherForecast(forecastData: HourForecast[]) {
+export function groupWeatherForecast(forecastData: HourForecastWithMS[], measurementSystem: string) {
   const dedupedForecastDates = dedupe(getDatesFrom(forecastData));
-  return groupForecastDataByDates(dedupedForecastDates, forecastData);
+  return groupForecastDataByDates(dedupedForecastDates, forecastData, measurementSystem);
 };

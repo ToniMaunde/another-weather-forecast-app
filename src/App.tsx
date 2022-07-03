@@ -8,8 +8,8 @@ import { Icon } from "./components/Icon";
 import searchIcon from "./assets/search";
 
 import getWeatherForecast from "./api";
-import { groupWeatherForecast } from "./utils";
-import type { HourForecast } from "./types";
+import { groupWeatherForecast, addMeasurementSystem } from "./utils";
+import type { HourForecastWithMS } from "./types";
 
 function App() {
   const [cityNotFound, setCityNotFound] = useState(false);
@@ -18,43 +18,11 @@ function App() {
     cityName: "",
     id: -1
   });
-  const [weatherForecast, setWeatherForecast] = useState<HourForecast[]>([]);
-  const groupedWeatherForecast = useMemo(() => groupWeatherForecast(weatherForecast), [weatherForecast]);
-
-  // This function simply converts the temperature when the measurement system changes
-  // Consider storing the rendered weather forecast in a memo with the measurement system as its
-  // single dependency array element
-  // const newWeatherDataMapper = (
-  //   gwf: GroupedWeatherForecast[],
-  //   temp: string,
-  // ): GroupedWeatherForecast[] => gwf.map((el) => {
-  //   const elementOfTheArray = el.weatherThroughOutDay.map((ell) => {
-  //     const newMin = convertTemperature(ell.main.temp_min, temp);
-  //     const newMax = convertTemperature(ell.main.temp_max, temp);
-  //     const newFeelsLike = convertTemperature(ell.main.feels_like, temp);
-  //     const newTemp = convertTemperature(ell.main.temp, temp);
-
-  //     const newWeatherThroughOutTheDay: WeatherForecast = {
-  //       dt: ell.dt,
-  //       main: {
-  //         feels_like: parseFloat(newFeelsLike),
-  //         temp: parseFloat(newTemp),
-  //         temp_min: parseFloat(newMin),
-  //         temp_max: parseFloat(newMax),
-  //       },
-  //       weather: ell.weather,
-  //     };
-
-  //     return { ...newWeatherThroughOutTheDay };
-  //   });
-  //   return {
-  //     date: el.date,
-  //     weatherThroughOutDay: elementOfTheArray,
-  //   };
-  // });
-
-  //   return groupedData;
-  // };
+  const [weatherForecast, setWeatherForecast] = useState<HourForecastWithMS[]>([]);
+  const groupedWeatherForecast = useMemo(
+    () => groupWeatherForecast(weatherForecast, measurementSystem),
+    [weatherForecast, measurementSystem]
+  );
 
   async function fetchWeatherForecastForFiveDays(cityName: string, measurementSys: string) {
     const result = await getWeatherForecast(cityName, measurementSys);
@@ -66,7 +34,8 @@ function App() {
     if (result.cod === "404"){
       setCityNotFound(true);
     } else {
-      setWeatherForecast(result.list);
+      const forecastDataWithMeasurementSystem = addMeasurementSystem(result.list, measurementSystem);
+      setWeatherForecast(forecastDataWithMeasurementSystem);
       setCity({cityName, id: result.city.id});
     }
   };
