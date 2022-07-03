@@ -1,32 +1,57 @@
-import { GroupedWeatherForecast, CurrentMinMax } from "../types";
+import { epochToTimeString } from "../utils";
+import type { GroupedWeatherForecast } from "../types";
 
-interface ForecastProps {
-  isDataReady: boolean;
-  cityNotFound: boolean;
-  groupedWeatherData: Array<GroupedWeatherForecast>;
-  currentMinMax: CurrentMinMax;
-  temperatureMap: string;
+type ForecastProps = { 
+  data: Array<GroupedWeatherForecast>;
+  cityName: string;
 }
 
-export default function Forecast() {
-  // const {
-  //   isDataReady,
-  //   cityNotFound,
-  //   groupedWeatherData,
-  //   currentMinMax,
-  //   temperatureMap
-  // } = props;
-  const baseURL = "https://openweathermap.org/img/wn/"
+// TODO: Add animations to this component
+export default function Forecast(props: ForecastProps) {
+  const { data, cityName } = props;
+  // This URL is for rendering the weather condition icons from the API.
+  const BASE_URL = "https://openweathermap.org/img/wn/";
 
-  // const formattedTime = (dt: number): string => {
-  //   return new Date(dt * 1000).toLocaleTimeString('pt-PT', {hour: '2-digit', minute: '2-digit'})
-  // }
+  if (data.length === 0) return null;
 
   return (
-    <div className="mx-7 mt-4">
-      <p className="mb-4 font-light text-xs text-secondary">Weather forecast for five days with 3-hour intervals.</p>
-      <ul className="forecast-shadows bg-light-dark rounded">
-        Container
+    <div className="mx-7 mt-4 mb-8">
+      <p className="mb-4 text-xs text-secondary">
+        <span className="font-light">Weather forecast for five days with 3-hour intervals for</span>
+        <strong>&nbsp;{cityName}</strong>.
+      </p>
+      <ul className="p-2 forecast-shadows bg-light-dark rounded">
+        {
+          data.map(({date, forecastInIntervals}, idx) => (
+            <li key={idx} className="flex flex-col mb-6">
+              <p className="mb-2 text-secondary font-semibold">
+                {date}
+              </p>
+              <ul className="flex space-x-5 overflow-x-auto sb-thin">
+                {
+                  forecastInIntervals.map((forecast, index) => (
+                    <li
+                      key={index}
+                      className="flex flex-col justify-center items-center"
+                    >
+                      <p className="text-secondary text-xs">
+                        {epochToTimeString(forecast.dt)}
+                      </p>
+                      <img
+                        className="w-8 h-auto"
+                        src={`${BASE_URL}${forecast.weather[0].icon}@2x.png`}
+                        alt={forecast.weather[0].description}
+                      />
+                      <p className="text-light">
+                        {`${forecast.main.temp_max.toFixed(0)}°`}
+                      </p>
+                    </li>
+                  ))
+                }
+              </ul>
+            </li>
+          ))
+        }
       </ul>
     </div>
   )
