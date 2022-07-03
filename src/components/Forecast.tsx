@@ -1,54 +1,58 @@
-import { GroupedWeatherForecast, CurrentMinMax } from '../types';
+import { epochToTimeString } from "../utils";
+import type { GroupedWeatherForecast } from "../types";
 
-interface ForecastProps {
-  isDataReady: boolean;
-  cityNotFound: boolean;
-  groupedWeatherData: Array<GroupedWeatherForecast>;
-  currentMinMax: CurrentMinMax;
-  temperatureMap: string;
+type ForecastProps = { 
+  data: Array<GroupedWeatherForecast>;
+  cityName: string;
 }
 
-const Forecast = (props: ForecastProps) => {
-  const {
-    isDataReady,
-    cityNotFound,
-    groupedWeatherData,
-    currentMinMax,
-    temperatureMap
-  } = props;
-  const baseURL = 'https://openweathermap.org/img/wn/'
+// TODO: Add animations to this component
+export default function Forecast(props: ForecastProps) {
+  const { data, cityName } = props;
+  // This URL is for rendering the weather condition icons from the API.
+  const BASE_URL = "https://openweathermap.org/img/wn/";
 
-  const formattedTime = (dt: number): string => {
-    return new Date(dt * 1000).toLocaleTimeString('pt-PT', {hour: '2-digit', minute: '2-digit'})
-  }
+  if (data.length === 0) return null;
 
   return (
-    <>
-      <ForecastContainer className="forecast">
-        {isDataReady && !cityNotFound && groupedWeatherData.map((wd, idx) => (
-          <li className="forecast__item" key={idx}>
-            <div className="forecast__title">
-              <span className="forecast__weekday">{wd.date}</span>
-              {idx===0 ? (
-                <>
-                  <span className="forecast__min-max">{`${currentMinMax.max.toFixed(0)}° ${currentMinMax.min.toFixed(0)}°`}</span>
-                  <img src={`${baseURL}${currentMinMax.icon}@2x.png`} />
-                </>
-              ) : ''}
-            </div>
-            <ul className="forecast__temps">
-              {wd.weatherThroughOutDay.map((wtd, idx) => (
-                <div className="forecast__temp-period" key={idx}>
-                  <span className="forecast__time">{formattedTime(wtd.dt)}</span>
-                  <img src={`${baseURL}${wtd.weather[0].icon}@2x.png`} alt={wtd.weather[0].description} />
-                  <span>{`${wtd.main.temp_max.toFixed(0)}°`}</span>
-                </div>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ForecastContainer>
-    </>
+    <div className="mx-7 mt-4 mb-8">
+      <p className="mb-4 text-xs text-secondary">
+        <span className="font-light">Weather forecast for five days with 3-hour intervals for</span>
+        <strong>&nbsp;{cityName}</strong>.
+      </p>
+      <ul className="p-2 forecast-shadows bg-light-dark rounded">
+        {
+          data.map(({date, forecastInIntervals}, idx) => (
+            <li key={idx} className="flex flex-col mb-6">
+              <p className="mb-2 text-secondary font-semibold">
+                {date}
+              </p>
+              <ul className="flex space-x-5 overflow-x-auto sb-thin">
+                {
+                  forecastInIntervals.map((forecast, index) => (
+                    <li
+                      key={index}
+                      className="flex flex-col justify-center items-center"
+                    >
+                      <p className="text-secondary text-xs">
+                        {epochToTimeString(forecast.dt)}
+                      </p>
+                      <img
+                        className="w-8 h-auto"
+                        src={`${BASE_URL}${forecast.weather[0].icon}@2x.png`}
+                        alt={forecast.weather[0].description}
+                      />
+                      <p className="text-light">
+                        {`${forecast.main.temp_max.toFixed(0)}°`}
+                      </p>
+                    </li>
+                  ))
+                }
+              </ul>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   )
-}
-export default Forecast
+};
