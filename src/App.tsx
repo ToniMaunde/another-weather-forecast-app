@@ -24,41 +24,6 @@ function App() {
     [weatherForecast, measurementSystem]
   );
 
-  // This function simply converts the temperature when the measurement system changes
-  // Consider storing the rendered weather forecast in a memo with the measurement system as its
-  // single dependency array element
-  // const newWeatherDataMapper = (
-  //   gwf: GroupedWeatherForecast[],
-  //   temp: string,
-  // ): GroupedWeatherForecast[] => gwf.map((el) => {
-  //   const elementOfTheArray = el.weatherThroughOutDay.map((ell) => {
-  //     const newMin = convertTemperature(ell.main.temp_min, temp);
-  //     const newMax = convertTemperature(ell.main.temp_max, temp);
-  //     const newFeelsLike = convertTemperature(ell.main.feels_like, temp);
-  //     const newTemp = convertTemperature(ell.main.temp, temp);
-
-  //     const newWeatherThroughOutTheDay: WeatherForecast = {
-  //       dt: ell.dt,
-  //       main: {
-  //         feels_like: parseFloat(newFeelsLike),
-  //         temp: parseFloat(newTemp),
-  //         temp_min: parseFloat(newMin),
-  //         temp_max: parseFloat(newMax),
-  //       },
-  //       weather: ell.weather,
-  //     };
-
-  //     return { ...newWeatherThroughOutTheDay };
-  //   });
-  //   return {
-  //     date: el.date,
-  //     weatherThroughOutDay: elementOfTheArray,
-  //   };
-  // });
-
-  //   return groupedData;
-  // };
-
   async function fetchWeatherForecastForFiveDays(cityName: string, measurementSys: string) {
     const result = await getWeatherForecast(cityName, measurementSys);
   
