@@ -17,7 +17,9 @@ export default function Forecast(props: ForecastProps) {
   return (
     <div className="mx-7 mt-4 mb-8">
       <p className="mb-4 text-xs text-secondary">
-        <span className="font-light">Weather forecast for five days with 3-hour intervals for</span>
+        <span className="font-light">
+          Weather forecast for five days in 3-hour intervals for
+        </span>
         <strong>&nbsp;{cityName}</strong>.
       </p>
       <ul className="p-2 forecast-shadows bg-light-dark rounded">

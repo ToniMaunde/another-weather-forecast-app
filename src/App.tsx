@@ -8,8 +8,8 @@ import { Icon } from "./components/Icon";
 import searchIcon from "./assets/search";
 
 import getWeatherForecast from "./api";
-import { groupWeatherForecast } from "./utils";
-import type { HourForecast } from "./types";
+import { groupWeatherForecast, addMeasurementSystem } from "./utils";
+import type { HourForecastWithMS } from "./types";
 
 function App() {
   const [cityNotFound, setCityNotFound] = useState(false);
@@ -18,8 +18,11 @@ function App() {
     cityName: "",
     id: -1
   });
-  const [weatherForecast, setWeatherForecast] = useState<HourForecast[]>([]);
-  const groupedWeatherForecast = useMemo(() => groupWeatherForecast(weatherForecast), [weatherForecast]);
+  const [weatherForecast, setWeatherForecast] = useState<HourForecastWithMS[]>([]);
+  const groupedWeatherForecast = useMemo(
+    () => groupWeatherForecast(weatherForecast, measurementSystem),
+    [weatherForecast, measurementSystem]
+  );
 
   // This function simply converts the temperature when the measurement system changes
   // Consider storing the rendered weather forecast in a memo with the measurement system as its
@@ -66,7 +69,8 @@ function App() {
     if (result.cod === "404"){
       setCityNotFound(true);
     } else {
-      setWeatherForecast(result.list);
+      const forecastDataWithMeasurementSystem = addMeasurementSystem(result.list, measurementSystem);
+      setWeatherForecast(forecastDataWithMeasurementSystem);
       setCity({cityName, id: result.city.id});
     }
   };
