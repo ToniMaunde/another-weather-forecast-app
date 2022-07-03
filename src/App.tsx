@@ -11,9 +11,7 @@ import getWeatherForecast from "./api";
 import { groupWeatherForecast } from "./utils";
 import type { HourForecast } from "./types";
 
-
 function App() {
-  // const [groupedWeatherData, setGroupedWeatherData] = useState<Array<GroupedWeatherForecast>>([]);
   const [cityNotFound, setCityNotFound] = useState(false);
   const [measurementSystem, setSystem] = useState("metric");
   const [userCity, setCity] = useState<{cityName: string, id: number}>({
