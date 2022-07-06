@@ -1,14 +1,35 @@
+import { useContext } from "react";
+import type { ChangeEvent } from "react";
+import { TranslationContext } from "../providers/translationProvider";
+import type { Language } from "../providers/translationProvider";
+
 export default function LanguageSwitcher() {
-  // TODO: Get state from context
-  const currentLanguage = "EN";
+  const languageContext = useContext(TranslationContext);
+
+  function handleChange(event: ChangeEvent<HTMLSelectElement>) {
+    const { value } = event.target;
+    languageContext?.setLanguage(value as Language)
+  };
+
   return (
     <select
       className="w-fit p-1 rounded bg-[#20212B] text-light cursor-pointer"
       name="languageSelector"
       id="languageSelector"
+      onChange={handleChange}
     >
-      <option value="en">EN</option>
-      <option value="pt">PT</option>
+      <option
+        value="en-EN"
+        defaultChecked={languageContext?.language === "en-EN"}
+      >
+        EN
+      </option>
+      <option
+        value="pt-PT"
+        defaultChecked={languageContext?.language === "pt-PT"}
+      >
+        PT
+      </option>
     </select>
   )
 }
