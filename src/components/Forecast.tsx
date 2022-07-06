@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { Language, TranslationContext } from "../providers/translationProvider";
+import { TranslationContext } from "../providers/translationProvider";
 import translation from "../utils/translation";
-import { epochToTimeString } from "../utils";
+import { epochToTimeString, nameCase } from "../utils";
 import type { GroupedWeatherForecast } from "../types";
 
 type ForecastProps = { 
@@ -36,7 +36,7 @@ export default function Forecast(props: ForecastProps) {
           data.map(({date, forecastInIntervals}, idx) => (
             <li key={`${idx}${date}`} className="flex flex-col mb-6">
               <p className="mb-2 text-secondary font-semibold">
-                {date}
+                {nameCase(date)}
               </p>
               <ul className="flex space-x-5 overflow-x-auto sb-thin">
                 {

@@ -12,6 +12,10 @@ export function epochToTimeString(epoch: number) {
   return dateFromEpoch.toLocaleTimeString("pt-PT", {hour: "2-digit", minute: "2-digit"})
 }
 
+export function nameCase(date: string) {
+  return `${date.charAt(0).toUpperCase()}${date.slice(1)}`
+};
+
 function getDatesFrom(array: HourForecast[], locale: Language) {
   const dates = array.map((hourForecast) => epochToDateString(hourForecast.dt, locale));
   /* Some of these dates are duplicated since the array of HourForecast contains forecast data 
