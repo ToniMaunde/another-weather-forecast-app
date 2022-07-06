@@ -1,19 +1,19 @@
+import { Language } from "../providers/translationProvider";
 import type { GroupedWeatherForecast, HourForecast, HourForecastWithMS } from "../types";
 
-function epochToDateString(epoch: number){
+function epochToDateString(epoch: number, locale : Language){
   const dateFromEpoch = new Date(epoch * 1000);
   // TODO: the locale should come from the TranslationProvider
-  return dateFromEpoch.toLocaleDateString("pt-PT", { weekday: "long" });
+  return dateFromEpoch.toLocaleDateString(locale, { weekday: "long" });
 };
 
 export function epochToTimeString(epoch: number) {
   const dateFromEpoch = new Date(epoch * 1000);
-  // TODO: the locale should come from the TranslationProvider
   return dateFromEpoch.toLocaleTimeString("pt-PT", {hour: "2-digit", minute: "2-digit"})
 }
 
-function getDatesFrom(array: HourForecast[]) {
-  const dates = array.map((hourForecast) => epochToDateString(hourForecast.dt));
+function getDatesFrom(array: HourForecast[], locale: Language) {
+  const dates = array.map((hourForecast) => epochToDateString(hourForecast.dt, locale));
   /* Some of these dates are duplicated since the array of HourForecast contains forecast data 
     for the whole day in 3-hours intervals.
   */
@@ -57,10 +57,10 @@ function recalculateForecastDataForDate(forecastData: HourForecastWithMS[], newM
   });
 };
 
-function groupForecastDataByDates(arrayOfDates: string[], forecastData: HourForecastWithMS[], newMeasurementSystem: string): GroupedWeatherForecast[] {
+function groupForecastDataByDates(arrayOfDates: string[], forecastData: HourForecastWithMS[], newMeasurementSystem: string, locale: Language): GroupedWeatherForecast[] {
   const groupedForecastData = arrayOfDates.map(date => {
     const forecastDataForDate = forecastData.filter(forecast => {
-      const forecastDateFromEpoch = epochToDateString(forecast.dt);
+      const forecastDateFromEpoch = epochToDateString(forecast.dt, locale);
       return forecastDateFromEpoch === date;
     });
     /*
@@ -84,7 +84,7 @@ function groupForecastDataByDates(arrayOfDates: string[], forecastData: HourFore
   return groupedForecastData;
 };
 
-export function groupWeatherForecast(forecastData: HourForecastWithMS[], measurementSystem: string) {
-  const dedupedForecastDates = dedupe(getDatesFrom(forecastData));
-  return groupForecastDataByDates(dedupedForecastDates, forecastData, measurementSystem);
+export function groupWeatherForecast(forecastData: HourForecastWithMS[], measurementSystem: string, locale: Language) {
+  const dedupedForecastDates = dedupe(getDatesFrom(forecastData, locale));
+  return groupForecastDataByDates(dedupedForecastDates, forecastData, measurementSystem, locale);
 };

@@ -1,3 +1,6 @@
+import { useContext } from "react";
+import { Language, TranslationContext } from "../providers/translationProvider";
+import translation from "../utils/translation";
 import { epochToTimeString } from "../utils";
 import type { GroupedWeatherForecast } from "../types";
 
@@ -8,7 +11,9 @@ type ForecastProps = {
 
 // TODO: Add animations to this component
 export default function Forecast(props: ForecastProps) {
+  const languageContext = useContext(TranslationContext);
   const { data, cityName } = props;
+
   // This URL is for rendering the weather condition icons from the API.
   const BASE_URL = "https://openweathermap.org/img/wn/";
 
@@ -18,14 +23,18 @@ export default function Forecast(props: ForecastProps) {
     <div className="mx-7 mt-4 mb-8">
       <p className="mb-4 text-xs text-secondary">
         <span className="font-light">
-          Weather forecast for five days in 3-hour intervals for
+          {
+            languageContext?.language === "en-EN"
+              ? translation.en.info
+              : translation.pt.info
+          }
         </span>
         <strong>&nbsp;{cityName}</strong>.
       </p>
       <ul className="p-2 forecast-shadows bg-light-dark rounded">
         {
           data.map(({date, forecastInIntervals}, idx) => (
-            <li key={idx} className="flex flex-col mb-6">
+            <li key={`${idx}${date}`} className="flex flex-col mb-6">
               <p className="mb-2 text-secondary font-semibold">
                 {date}
               </p>
@@ -33,7 +42,7 @@ export default function Forecast(props: ForecastProps) {
                 {
                   forecastInIntervals.map((forecast, index) => (
                     <li
-                      key={index}
+                      key={`${index}${forecast.dt}`}
                       className="flex flex-col justify-center items-center"
                     >
                       <p className="text-secondary text-xs">

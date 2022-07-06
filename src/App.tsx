@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 import type { MouseEvent, ChangeEvent} from "react";
 
 import Navbar from "./components/Navbar";
@@ -8,11 +8,13 @@ import { Icon } from "./components/Icon";
 import searchIcon from "./assets/search";
 
 import getWeatherForecast from "./api";
+import { Language, TranslationContext } from "./providers/translationProvider";
 import { groupWeatherForecast, addMeasurementSystem } from "./utils";
 import type { HourForecastWithMS } from "./types";
+import translation from "./utils/translation";
 
 function App() {
-  const [cityNotFound, setCityNotFound] = useState(false);
+  const languageContext = useContext(TranslationContext);
   const [measurementSystem, setSystem] = useState("metric");
   const [userCity, setCity] = useState<{cityName: string, id: number}>({
     cityName: "",
@@ -20,8 +22,8 @@ function App() {
   });
   const [weatherForecast, setWeatherForecast] = useState<HourForecastWithMS[]>([]);
   const groupedWeatherForecast = useMemo(
-    () => groupWeatherForecast(weatherForecast, measurementSystem),
-    [weatherForecast, measurementSystem]
+    () => groupWeatherForecast(weatherForecast, measurementSystem, languageContext?.language as Language),
+    [weatherForecast, measurementSystem, languageContext]
   );
 
   async function fetchWeatherForecastForFiveDays(cityName: string, measurementSys: string) {
@@ -32,7 +34,8 @@ function App() {
     }
 
     if (result.cod === "404"){
-      setCityNotFound(true);
+      // TODO: handle 404
+      // setCityNotFound(true);
     } else {
       const forecastDataWithMeasurementSystem = addMeasurementSystem(result.list, measurementSystem);
       setWeatherForecast(forecastDataWithMeasurementSystem);
@@ -62,6 +65,9 @@ function App() {
     setSystem(value);
   };
 
+  // TODO: consider making components out of all elements that will consume the translation
+  // and use the context
+
   return (
     <main className="w-full m-0 p-0 flex flex-col grow bg-dark">
       <Navbar />
@@ -69,7 +75,13 @@ function App() {
         onSubmit={handleSubmit}
         className="mt-4 px-7 flex flex-col">
         <div className="mb-6">
-          <p className="text-light font-semibold">Temperature in °</p>
+          <p className="text-light font-semibold">
+            {
+              languageContext?.language === "en-EN"
+                ? translation.en.form.measurementLabel
+                : translation.pt.form.measurementLabel
+            }°
+          </p>
           <div className="flex space-x-8">
             <label htmlFor="celsius" className="text-secondary cursor-pointer">
               <input
@@ -97,7 +109,11 @@ function App() {
           </div>
         </div>
         <label htmlFor="city" className="flex flex-col text-light font-semibold">
-          Name of the city
+            {
+              languageContext?.language === "en-EN"
+                ? translation.en.form.cityLabel
+                : translation.pt.form.cityLabel
+            }
           <div className="mt-1 grid grid-cols-8">
             <input
               className="col-span-7 p-2 w-full font-normal rounded rounded-tr-none rounded-br-none text-dark focus-visible:outline-primary focus-visible:outline-1"
