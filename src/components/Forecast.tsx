@@ -1,18 +1,18 @@
-import { useContext } from "react";
-import { TranslationContext } from "../providers/translationProvider";
-import translation from "../utils/translation";
+import type { TranslationContextType } from "../providers/translationProvider";
+import type { TranslationType } from "../utils/translation";
 import { epochToTimeString, nameCase } from "../utils";
 import type { GroupedWeatherForecast } from "../types";
 
 type ForecastProps = { 
   data: Array<GroupedWeatherForecast>;
   cityName: string;
+  languageContext: TranslationContextType | null;
+  translation: TranslationType;
 }
 
 // TODO: Add animations to this component
 export default function Forecast(props: ForecastProps) {
-  const languageContext = useContext(TranslationContext);
-  const { data, cityName } = props;
+  const { data, cityName, languageContext, translation } = props;
 
   // This URL is for rendering the weather condition icons from the API.
   const BASE_URL = "https://openweathermap.org/img/wn/";
