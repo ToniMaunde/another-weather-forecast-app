@@ -11,7 +11,7 @@ import getWeatherForecast from "./api";
 import { Language, TranslationContext } from "./providers/translationProvider";
 import { groupWeatherForecast, addMeasurementSystem } from "./utils";
 import type { HourForecastWithMS } from "./types";
-import translation from "./utils/translation";
+import { translation } from "./utils/translation";
 
 function App() {
   const languageContext = useContext(TranslationContext);
@@ -131,8 +131,13 @@ function App() {
           </div>
         </label>
       </form>
-      <Forecast data={groupedWeatherForecast} cityName={userCity.cityName} />
-      <Footer />
+      <Forecast
+          data={groupedWeatherForecast}
+          cityName={userCity.cityName}
+          translation={translation}
+          languageContext={languageContext}
+      />
+      <Footer translation={translation} languageContext={languageContext} />
     </main>
   );
 }

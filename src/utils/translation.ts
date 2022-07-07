@@ -12,12 +12,12 @@ type TranslationLanguage = {
   }
 };
 
-type Translation = {
+export type TranslationType = {
   en: TranslationLanguage;
   pt: TranslationLanguage;
 };
 
-const translation: Translation = {
+const translation: TranslationType = {
   en: {
     form: {
       measurementLabel: "Temperature in ",
@@ -46,4 +46,4 @@ const translation: Translation = {
   },
 };
 
-export default translation;
+export { translation };

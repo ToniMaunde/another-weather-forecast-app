@@ -1,9 +1,13 @@
-import { useContext } from "react";
-import { TranslationContext } from "../providers/translationProvider";
-import translation from "../utils/translation";
+import { TranslationContextType } from "../providers/translationProvider";
+import type { TranslationType } from "../utils/translation";
 
-export default function Footer() {
-  const languageContext = useContext(TranslationContext);
+type FooterProps = {
+  languageContext: TranslationContextType | null;
+  translation: TranslationType
+}
+
+export default function Footer(props: FooterProps) {
+  const { languageContext, translation } = props;
 
   return (
     <footer className="px-7 mt-auto mb-8 flex flex-col text-secondary">

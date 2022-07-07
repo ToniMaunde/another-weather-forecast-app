@@ -6,7 +6,7 @@ export enum Language {
   PT = "pt-PT"
 };
 
-type TranslationContextType = {
+export type TranslationContextType = {
   language: Language;
   setLanguage: Dispatch<SetStateAction<Language>>;
 }
