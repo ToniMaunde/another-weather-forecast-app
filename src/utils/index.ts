@@ -3,7 +3,6 @@ import type { GroupedWeatherForecast, HourForecast, HourForecastWithMS } from ".
 
 function epochToDateString(epoch: number, locale : Language){
   const dateFromEpoch = new Date(epoch * 1000);
-  // TODO: the locale should come from the TranslationProvider
   return dateFromEpoch.toLocaleDateString(locale, { weekday: "long" });
 };
 

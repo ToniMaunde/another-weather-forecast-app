@@ -29,7 +29,7 @@ export default function Forecast(props: ForecastProps) {
               : translation.pt.info
           }
         </span>
-        <strong>&nbsp;{cityName}</strong>.
+        <strong>{cityName}</strong>.
       </p>
       <ul className="p-2 forecast-shadows bg-light-dark rounded">
         {

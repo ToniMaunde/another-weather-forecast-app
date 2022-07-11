@@ -16,6 +16,7 @@ import { translation } from "./utils/translation";
 function App() {
   const languageContext = useContext(TranslationContext);
   const [measurementSystem, setSystem] = useState("metric");
+  const [cityNotFound, setNotFound] = useState(false);
   const [userCity, setCity] = useState<{cityName: string, id: number}>({
     cityName: "",
     id: -1
@@ -34,8 +35,7 @@ function App() {
     }
 
     if (result.cod === "404"){
-      // TODO: handle 404
-      // setCityNotFound(true);
+      setNotFound(true);
     } else {
       const forecastDataWithMeasurementSystem = addMeasurementSystem(result.list, measurementSystem);
       setWeatherForecast(forecastDataWithMeasurementSystem);
@@ -44,6 +44,7 @@ function App() {
   };
 
   function handleSubmit (event: MouseEvent<HTMLFormElement>) {
+    setNotFound(false);
     event.preventDefault();
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -128,15 +129,28 @@ function App() {
             >
               <Icon {...searchIcon} customClasses="w-8 h-auto fill-dark" />
             </button>
+            {
+              cityNotFound &&
+                <small className="col-span-8 text-red">
+                  {
+                    languageContext?.language === "en-EN"
+                      ? translation.en.cityNotFound
+                      : translation.pt.cityNotFound
+                  }
+                </small>
+            }
           </div>
         </label>
       </form>
-      <Forecast
-          data={groupedWeatherForecast}
-          cityName={userCity.cityName}
-          translation={translation}
-          languageContext={languageContext}
-      />
+      {
+        !cityNotFound &&
+          <Forecast
+            data={groupedWeatherForecast}
+            cityName={userCity.cityName}
+            translation={translation}
+            languageContext={languageContext}
+          />
+      }
       <Footer translation={translation} languageContext={languageContext} />
     </main>
   );

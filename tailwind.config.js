@@ -13,7 +13,8 @@ module.exports = {
       "light": "#FFFFFF",
       "primary": "#FFD059",
       "secondary": "#E5DADA",
-      "light-blue": "#78D5D7"
+      "light-blue": "#78D5D7",
+      "red": "#C42847"
     },
     extend: {},
   },

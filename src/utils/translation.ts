@@ -4,6 +4,7 @@ type TranslationLanguage = {
     cityLabel: string; 
   };
   info: string;
+  cityNotFound: string;
   footer: {
     githubRepo: string;
     authorLabel: string;
@@ -24,6 +25,7 @@ const translation: TranslationType = {
       cityLabel: "City"
     },
     info: "Weather forecast for five days in 3-hour intervals for ",
+    cityNotFound: "City not found",
     footer: {
       githubRepo: "github repository",
       authorLabel: "Author",
@@ -37,6 +39,7 @@ const translation: TranslationType = {
       cityLabel: "Cidade"
     },
     info: "Previsao metereologica para cinco dias em intervalos de 3 horas para ",
+    cityNotFound: "Cidade não encontrada",
     footer: {
       githubRepo: "repositorio github",
       authorLabel: "Autor",
