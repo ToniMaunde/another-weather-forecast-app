@@ -1,4 +1,5 @@
 module.exports = {
+  darkMode: "class",
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
@@ -8,13 +9,17 @@ module.exports = {
       "body": ["\"Inter Regular\""]
     },
     colors: {
-      "dark": "#02040F",
-      "light-dark": "#0D101F",
-      "light": "#FFFFFF",
-      "primary": "#FFD059",
-      "secondary": "#E5DADA",
-      "light-blue": "#78D5D7",
-      "red": "#C42847"
+      "light-background": "#FBFCF8",
+      "light-primary": "#0D101F",
+      "light-secondary": "#784F41",
+      "light-tertiary": "#02040F",
+      "dark-background": "#02040F",
+      "dark-primary": "#FFD059",
+      "dark-secondary": "#0D101F",
+      "dark-tertiary": "#E5DADA",
+      "white": "#FFFFFF",
+      "red": "#DF066F",
+      "green": "#6B8F71"
     },
     extend: {},
   },

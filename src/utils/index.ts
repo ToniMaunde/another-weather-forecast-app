@@ -1,6 +1,25 @@
 import { Language } from "../providers/translationProvider";
 import type { GroupedWeatherForecast, HourForecast, HourForecastWithMS } from "../types";
 
+export function initThemeSettings() {
+  if (typeof window !== "undefined") {
+    if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }
+};
+
+export function getTheme() {
+  return localStorage.getItem("theme");
+};
+
+export function persistTheme(theme: string) {
+  localStorage.setItem("theme", theme);
+}; 
+
 function epochToDateString(epoch: number, locale : Language){
   const dateFromEpoch = new Date(epoch * 1000);
   return dateFromEpoch.toLocaleDateString(locale, { weekday: "long" });
