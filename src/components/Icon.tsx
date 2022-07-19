@@ -13,8 +13,8 @@ export type TIcon = {
   title: string;
   customClasses?: string;
   id?: string;
-  onClick: MouseEventHandler<SVGElement> | undefined;
-  "data-icon": string | undefined;
+  onClick?: MouseEventHandler<SVGElement> | undefined;
+  "data-icon"?: string | undefined;
 }
 
 export function Icon(props: TIcon) {
