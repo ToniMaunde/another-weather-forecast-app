@@ -101,7 +101,7 @@ function App() {
               className="text-light-primary dark:text-dark-tertiary cursor-pointer"
             >
               <input
-                className="accent-primary dark:accent-dark-primary cursor-pointer"
+                className="accent-light-primary dark:accent-dark-primary cursor-pointer"
                 type="radio"
                 name="temperatureUnit"
                 value="imperial"

@@ -13,12 +13,9 @@ export function initThemeSettings() {
 };
 
 export function getTheme() {
-  return localStorage.getItem("theme");
+  const theme = localStorage.getItem("theme");
+  return typeof theme === "string" ? theme : "dark";
 };
-
-export function persistTheme(theme: string) {
-  localStorage.setItem("theme", theme);
-}; 
 
 function epochToDateString(epoch: number, locale : Language){
   const dateFromEpoch = new Date(epoch * 1000);

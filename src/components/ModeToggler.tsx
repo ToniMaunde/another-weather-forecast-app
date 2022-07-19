@@ -1,24 +1,18 @@
-import { useEffect, useState } from "react";
 import type { MouseEvent } from "react";
 import { Icon } from "./Icon"
 import darkModeIcon from "../assets/darkMode"
 import lightModeIcon from "../assets/lightMode"
-import { getTheme, persistTheme } from "../utils";
+import { useTheme } from "../utils/useTheme";
+import { getTheme } from "../utils";
 
 export default function ModeToggler(props: {classes: string}) {
   const { classes } = props;
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    const persistedTheme = getTheme();
-    if (persistedTheme) setTheme(persistedTheme);
-  }, [])
+  const { theme, setTheme }= useTheme(getTheme())
 
   function handleClick(event: MouseEvent<SVGElement>) {
-    const newThemeValue = event.currentTarget.dataset.icon;
+    const newThemeValue = event.currentTarget.dataset.icon as string;
     if (newThemeValue) {
       setTheme(newThemeValue);
-      persistTheme(newThemeValue);
     }
   };
 
