@@ -31,10 +31,10 @@ export default function Forecast(props: ForecastProps) {
         </span>
         <strong>{cityName}</strong>.
       </p>
-      <ul className="p-2 forecast-shadows bg-white dark:bg-dark-secondary rounded">
+      <ul className="flex flex-col p-2 space-y-6 forecast-shadows bg-white dark:bg-dark-secondary rounded">
         {
           data.map(({date, forecastInIntervals}, idx) => (
-            <li key={`${idx}${date}`} className="flex flex-col mb-6">
+            <li key={`${idx}${date}`} className="flex flex-col">
               <p className="mb-2 text-light-primary dark:text-white font-semibold">
                 {nameCase(date)}
               </p>
