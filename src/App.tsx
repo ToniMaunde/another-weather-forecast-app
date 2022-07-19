@@ -66,17 +66,14 @@ function App() {
     setSystem(value);
   };
 
-  // TODO: consider making components out of all elements that will consume the translation
-  // and use the context
-
   return (
-    <main className="w-full m-0 p-0 flex flex-col grow bg-dark">
+    <main className="w-full m-0 p-0 flex flex-col grow bg-light-background dark:bg-dark-background">
       <Navbar />
       <form
         onSubmit={handleSubmit}
         className="mt-4 px-7 flex flex-col">
         <div className="mb-6">
-          <p className="text-light font-semibold">
+          <p className="text-light-primary dark:text-white font-semibold">
             {
               languageContext?.language === "en-EN"
                 ? translation.en.form.measurementLabel
@@ -84,9 +81,12 @@ function App() {
             }°
           </p>
           <div className="flex space-x-8">
-            <label htmlFor="celsius" className="text-secondary cursor-pointer">
+            <label
+              htmlFor="celsius"
+              className="text-light-primary dark:text-dark-tertiary cursor-pointer"
+            >
               <input
-                className="accent-primary cursor-pointer"
+                className="accent-light-primary dark:accent-dark-primary cursor-pointer"
                 type="radio"
                 name="temperatureUnit"
                 value="metric"
@@ -96,9 +96,12 @@ function App() {
                 required
               /> Celsius
             </label>
-            <label htmlFor="fahrenheit" className="text-secondary cursor-pointer">
+            <label
+              htmlFor="fahrenheit"
+              className="text-light-primary dark:text-dark-tertiary cursor-pointer"
+            >
               <input
-                className="accent-primary cursor-pointer"
+                className="accent-light-primary dark:accent-dark-primary cursor-pointer"
                 type="radio"
                 name="temperatureUnit"
                 value="imperial"
@@ -109,25 +112,27 @@ function App() {
             </label>
           </div>
         </div>
-        <label htmlFor="city" className="flex flex-col text-light font-semibold">
+        <label
+          htmlFor="city"
+          className="flex flex-col text-light-primary dark:text-dark-tertiary font-semibold">
             {
               languageContext?.language === "en-EN"
                 ? translation.en.form.cityLabel
                 : translation.pt.form.cityLabel
             }
-          <div className="mt-1 grid grid-cols-8">
+          <div className="mt-1 grid grid-cols-10">
             <input
-              className="col-span-7 p-2 w-full font-normal rounded rounded-tr-none rounded-br-none text-dark focus-visible:outline-primary focus-visible:outline-1"
-              type="text"
+              className="col-span-8 p-2 w-full font-normal rounded rounded-tr-none rounded-br-none bg-white text-light-primary dark:text-dark-secondary border-r-0 border border-light-primary dark:border-white"
+              type="search"
               name="city"
               id="city"
               required
             />
             <button
               type="submit"
-              className="bg-primary grid place-items-center rounded-tr rounded-br"
+              className="bg-light-primary dark:bg-dark-primary col-span-2 grid place-items-center rounded-tr rounded-br"
             >
-              <Icon {...searchIcon} customClasses="w-8 h-auto fill-dark" />
+              <Icon {...searchIcon} customClasses="w-8 h-auto fill-white dark:fill-dark-background" />
             </button>
             {
               cityNotFound &&

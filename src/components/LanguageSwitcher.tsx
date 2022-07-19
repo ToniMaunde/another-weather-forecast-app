@@ -13,7 +13,7 @@ export default function LanguageSwitcher() {
 
   return (
     <select
-      className="w-fit p-1 rounded bg-[#20212B] text-light cursor-pointer"
+      className="w-fit p-1 rounded text-light-primary dark:text-white bg-light-background dark:bg-dark-background cursor-pointer"
       name="languageSelector"
       id="languageSelector"
       onChange={handleChange}

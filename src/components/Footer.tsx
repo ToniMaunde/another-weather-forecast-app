@@ -10,8 +10,8 @@ export default function Footer(props: FooterProps) {
   const { languageContext, translation } = props;
 
   return (
-    <footer className="px-7 mt-auto mb-8 flex flex-col text-secondary">
-      <p className="font-semibold text-primary">Weather App</p>
+    <footer className="px-7 mt-auto mb-8 flex flex-col text-light-primary dark:text-white">
+      <p className="font-semibold text-light-secondary dark:text-dark-primary">Weather App</p>
       <a
         href="https://github.com/ToniMaunde/another-weather-forecast-app"
         target="_blank"
@@ -23,7 +23,7 @@ export default function Footer(props: FooterProps) {
             : translation.pt.footer.githubRepo
         }&#128279;
       </a>
-      <p className="mt-4 font-semibold text-primary">
+      <p className="mt-4 font-semibold text-light-secondary dark:text-dark-primary">
         {
           languageContext?.language === "en-EN"
             ? translation.en.footer.authorLabel
