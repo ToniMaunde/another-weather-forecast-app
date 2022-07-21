@@ -14,6 +14,8 @@ type ForecastProps = {
 export default function Forecast(props: ForecastProps) {
   const { data, cityName, languageContext, translation } = props;
 
+  // create a function that returns the url for the icon after a fetch request
+  // function should return the same url when the icon is the same?
   // This URL is for rendering the weather condition icons from the API.
   const BASE_URL = "https://openweathermap.org/img/wn/";
 

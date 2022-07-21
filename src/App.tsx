@@ -86,7 +86,7 @@ function App() {
               className="text-light-primary dark:text-dark-tertiary cursor-pointer"
             >
               <input
-                className="accent-light-primary dark:accent-dark-primary cursor-pointer"
+                className="accent-light-primary dark:accent-dark-secondary cursor-pointer"
                 type="radio"
                 name="temperatureUnit"
                 value="metric"
@@ -101,7 +101,7 @@ function App() {
               className="text-light-primary dark:text-dark-tertiary cursor-pointer"
             >
               <input
-                className="accent-light-primary dark:accent-dark-primary cursor-pointer"
+                className="accent-light-primary dark:accent-dark-secondary cursor-pointer"
                 type="radio"
                 name="temperatureUnit"
                 value="imperial"
@@ -130,9 +130,9 @@ function App() {
             />
             <button
               type="submit"
-              className="bg-light-primary dark:bg-dark-primary col-span-2 grid place-items-center rounded-tr rounded-br"
+              className="bg-light-primary dark:bg-dark-secondary col-span-2 grid place-items-center rounded-tr rounded-br"
             >
-              <Icon {...searchIcon} customClasses="w-8 h-auto fill-white dark:fill-dark-background" />
+              <Icon {...searchIcon} customClasses="w-8 h-auto fill-white" />
             </button>
             {
               cityNotFound &&
