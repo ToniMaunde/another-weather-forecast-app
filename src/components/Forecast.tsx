@@ -2,6 +2,7 @@ import type { TranslationContextType } from "../providers/translationProvider";
 import type { TranslationType } from "../utils/translation";
 import { epochToTimeString, nameCase } from "../utils";
 import type { GroupedWeatherForecast } from "../types";
+import WeatherIcon from "./WeatherIcon";
 
 type ForecastProps = { 
   data: Array<GroupedWeatherForecast>;
@@ -14,10 +15,19 @@ type ForecastProps = {
 export default function Forecast(props: ForecastProps) {
   const { data, cityName, languageContext, translation } = props;
 
-  // create a function that returns the url for the icon after a fetch request
-  // function should return the same url when the icon is the same?
-  // This URL is for rendering the weather condition icons from the API.
-  const BASE_URL = "https://openweathermap.org/img/wn/";
+  /*
+    This function enables the caching of the weather condition icons
+  */
+  async function forecastIcon (iconName: string):Promise<string> {
+    const BASE_URL = "https://openweathermap.org/img/wn/";
+    const requestURL = `${BASE_URL}${iconName}@2x.png`;
+    const requestOptions: RequestInit = {
+      method: "GET",
+      cache: "default"
+    };
+    const iconBlob = await (await fetch(requestURL, requestOptions)).blob();
+    return URL.createObjectURL(iconBlob);
+  };
 
   if (data.length === 0) return null;
   // TODO: Destructure this component
@@ -50,9 +60,9 @@ export default function Forecast(props: ForecastProps) {
                       <p className="text-light-secondary dark:text-dark-tertiary text-xs">
                         {epochToTimeString(forecast.dt)}
                       </p>
-                      <img
+                      <WeatherIcon
                         className="w-8 h-auto"
-                        src={`${BASE_URL}${forecast.weather[0].icon}@2x.png`}
+                        url={forecastIcon(forecast.weather[0].icon)}
                         alt={forecast.weather[0].description}
                       />
                       <p className="text-light-primary dark:text-white">
