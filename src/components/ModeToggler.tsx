@@ -5,8 +5,8 @@ import lightModeIcon from "../assets/lightMode"
 import { useTheme } from "../utils/useTheme";
 import { getTheme } from "../utils";
 
-export default function ModeToggler(props: {classes: string}) {
-  const { classes } = props;
+export default function ModeToggler(props: {className: string | undefined}) {
+  const { className } = props;
   const { theme, setTheme }= useTheme(getTheme())
 
   function handleClick(event: MouseEvent<SVGElement>) {
@@ -25,14 +25,14 @@ export default function ModeToggler(props: {classes: string}) {
               {...darkModeIcon}
               onClick={handleClick}
               data-icon="light"
-              customClasses={`w-6 fill-secondary h-auto ${classes}`}
+              className={className}
             />
           : <Icon
               key="light"
               {...lightModeIcon}
               onClick={handleClick}
               data-icon="dark"
-              customClasses={`w-6 fill-secondary h-auto ${classes}`}
+              className={className}
             />
       }
     </>

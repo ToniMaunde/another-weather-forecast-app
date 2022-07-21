@@ -31,6 +31,7 @@ function App() {
     const result = await getWeatherForecast(cityName, measurementSys);
   
     if (typeof result === "boolean") {
+      // TODO: Handle error
       throw new Error("An error occurred");
     }
 
@@ -132,7 +133,9 @@ function App() {
               type="submit"
               className="bg-light-primary dark:bg-dark-secondary col-span-2 grid place-items-center rounded-tr rounded-br"
             >
-              <Icon {...searchIcon} customClasses="w-8 h-auto fill-white" />
+              <Icon
+                {...searchIcon}
+                className="w-8 h-auto fill-white" />
             </button>
             {
               cityNotFound &&

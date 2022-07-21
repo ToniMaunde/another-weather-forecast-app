@@ -11,7 +11,7 @@ export type TIcon = {
     id?: string;
   }>;
   title: string;
-  customClasses?: string;
+  className?: string | undefined;
   id?: string;
   onClick?: MouseEventHandler<SVGElement> | undefined;
   "data-icon"?: string | undefined;
@@ -21,7 +21,7 @@ export function Icon(props: TIcon) {
   const {
     viewBox,
     paths,
-    customClasses,
+    className,
     title,
     id,
     onClick,
@@ -31,7 +31,7 @@ export function Icon(props: TIcon) {
     <svg
       viewBox={viewBox}
       id={id}
-      className={`icon cursor-pointer ${customClasses || ""}`}
+      className={className}
       onClick={onClick}
       data-icon={props["data-icon"]}
     >
