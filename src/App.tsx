@@ -122,7 +122,7 @@ function App() {
             }
           <div className="mt-1 grid grid-cols-10">
             <input
-              className="col-span-8 p-2 w-full font-normal rounded rounded-tr-none rounded-br-none bg-white text-light-primary dark:text-dark-secondary border-r-0 border border-light-primary dark:border-white"
+              className="col-span-8 p-2 w-full font-normal rounded rounded-tr-none rounded-br-none bg-white text-light-primary dark:text-dark-secondary border-r-0 border border-light-primary dark:border-white outline-none"
               type="search"
               name="city"
               id="city"
