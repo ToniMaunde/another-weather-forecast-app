@@ -7,7 +7,7 @@ import { getTheme } from "../utils";
 
 export default function ModeToggler(props: {className: string | undefined}) {
   const { className } = props;
-  const { theme, setTheme }= useTheme(getTheme())
+  const { theme, setTheme }= useTheme(getTheme());
 
   function handleClick(event: MouseEvent<SVGElement>) {
     const newThemeValue = event.currentTarget.dataset.icon as string;

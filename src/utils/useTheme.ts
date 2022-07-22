@@ -8,7 +8,7 @@ export function useTheme(userTheme: string) {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
     } else document.documentElement.classList.remove("dark");
-  },[theme])
+  },[theme]);
 
   return { theme, setTheme };
 };

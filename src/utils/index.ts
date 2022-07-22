@@ -8,6 +8,7 @@ export function initThemeSettings() {
       localStorage.setItem("theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     }
   }
 };
