@@ -12,7 +12,7 @@ export default function WeatherIcon(props: WeatherIconType) {
 
   useEffect(() => {
     url.then(value => setLocalURL(value));
-  },[])
+  },[url])
   return (
     <img
       src={localURL}
